@@ -55,11 +55,11 @@ module DUO {
   module Active {
 
     interface R {
-      ["ami"] Object* getCallback();
+      ["ami"] Object* getObserver();
     };
 
     interface W {
-      ["ami"] void setCallback(Object* callback);
+      ["ami"] void setObserver(Object* observer);
     };
 
   };
