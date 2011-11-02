@@ -1,0 +1,18 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+VERSION=0.1
+
+%:
+	@echo "******************************************"
+	@echo $@
+	dh  $@
+
+build-orig-source:
+	mkdir -p duo-slice-$(VERSION)
+	tar --exclude=debian --exclude=\*~ --exclude=\.hg --exclude=.hgignore \
+		--exclude=duo-slice-$(VERSION) --exclude=\*.o --exclude=\*.h \
+		--exclude=\*.cpp -cf - . \
+		| ( cd duo-slice-$(VERSION) && tar xf - )
+	tar -czf ../duo-slice_$(VERSION).orig.tar.gz duo-slice-$(VERSION)
+	$(RM) -r duo-slice-$(VERSION)
