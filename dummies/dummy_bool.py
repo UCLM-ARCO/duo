@@ -6,6 +6,10 @@ import sys
 import dummy_base as base
 
 
+class BoolGUI(base.GUI):
+    pass
+
+
 class DummyBool(base.Dummy):
 
     def add_options(self):
@@ -16,10 +20,14 @@ class DummyBool(base.Dummy):
             '--init', dest='state', type=bool, help="initial state",
             default=False)
 
-    def create_servant(self):
+    def do_create_servant(self):
         iface = "IBool.{0}".format(self.args.interface)
         dummyClass = base.MetaDummy(iface)
-        self.servant = dummyClass(self.args.state)
+        return dummyClass(self.args.state)
+
+    def do_create_gui(self):
+        return BoolGUI()
+
 
 
 if __name__ == "__main__":

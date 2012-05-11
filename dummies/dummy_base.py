@@ -1,21 +1,32 @@
 # -*- mode: python; coding: utf-8 -*-
 
-import gtk
-import gobject
 import logging
 import signal
 import argparse
+
+import gobject
+from gi.repository import Gtk
 
 import Ice
 import IceStorm
 
 
-gtk.gdk.threads_init()
+Gtk.gdk.threads_init()
+logging.basicConfig(level=logging.DEBUG,
+                    format='DUMMY|%(levelname)s: %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S',)
 
 
 def loadSlice(name):
     string = '-I{0} -I. -I../slice --all {1}'
     Ice.loadSlice(string.format(Ice.getSliceDir(), name))
+
+
+loadSlice('dummy.ice')
+loadSlice('../slice/DUO.ice')
+
+import DUO
+import Actor
 
 
 def closeOnSystemExit(mth):
@@ -31,17 +42,6 @@ def closeOnSystemExit(mth):
 class DummyException(Exception):
     def __init__(self, msg):
         self.message = msg
-
-
-loadSlice('dummy.ice')
-loadSlice('../slice/DUO.ice')
-
-import DUO
-import Actor
-
-logging.basicConfig(level=logging.DEBUG,
-                    format='DUMMY|%(levelname)s: %(message)s',
-                    datefmt='%Y-%m-%d %H:%M:%S',)
 
 
 class Subject(object):
@@ -74,6 +74,28 @@ class Subject(object):
                     self.unregister(ob)
 
             gobject.idle_add(idle_call)
+
+
+class GladeWrapper(object):
+    def __init__(self, filename, widget=None):
+        self._glade = gtk.glade.XML(filename, widget)
+        self._glade.signal_autoconnect(self)
+
+    def __getattr__(self, name):
+        try:
+            return self.__dict__[name]
+        except KeyError, e:
+            if name.startswith("wg_"):
+                ret = self.__glade.get_widget(name[3:])
+                if ret:
+                    self.__dict__[name] = ret
+                    return ret
+            raise AttributeError("{0}: {1}".format((str(self.__class__), e)))
+
+
+class GUI(GladeWrapper):
+    def __init__(self):
+        GladeWrapper.__init__(self, "dummy.glade")
 
 
 class Active_I(Subject):
@@ -181,6 +203,7 @@ class Dummy(Ice.Application):
         self.register_servant()
 
         self.post_setup_servant()
+        self.create_gui()
 
     def build_endpoint_string(self):
         self.endp = "tcp"
@@ -201,6 +224,9 @@ class Dummy(Ice.Application):
         self.adapter.activate()
 
     def create_servant(self):
+        self.servant = self.do_create_servant()
+
+    def do_create_servant(self):
         """ To implement on subclass """
         raise NotImplementedError
 
@@ -249,6 +275,17 @@ class Dummy(Ice.Application):
 
         logging.info("Proxy used: '{0}'".format(self.proxy))
 
+    def create_gui(self):
+        if self.args.nogui:
+            return
+
+        self.gui = self.do_create_gui()
+        self.gui.show()
+
+    def do_create_gui(self):
+        """ To implement on subclass """
+        raise NotImplementedError
+
     def wait(self):
         self.shutdownOnInterrupt()
 
@@ -269,6 +306,10 @@ class Dummy(Ice.Application):
 
         self.arg_parser.add_argument(
             '--suscribe', help='topic on which suscribe servant')
+
+        self.arg_parser.add_argument(
+            '--no-gui', dest='nogui', action='store_true',
+            help="don't use graphical user interface")
 
     def add_options(self):
         """ To implement on subclass """
