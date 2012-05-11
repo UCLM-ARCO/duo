@@ -86,4 +86,4 @@ class App(Ice.Application):
 
 
 if __name__ == "__main__":
-    App().main(sys.argv, "local.cfg")
+    App().main(sys.argv, "client.cfg")

@@ -24,4 +24,4 @@ class DummyBool(base.Dummy):
 
 if __name__ == "__main__":
     dummy = DummyBool()
-    sys.exit(dummy.main(sys.argv, "local.cfg"))
+    sys.exit(dummy.main(sys.argv, "dummy.cfg"))
