@@ -1,0 +1,13 @@
+# -*- mode: conf; coding: utf-8 -*-
+
+# TopicManager
+IceStorm.TopicManager.Proxy=IceStorm/TopicManager -t:tcp -h 127.0.0.1 -p 12345
+
+# Ice related
+Ice.ACM.Client=5
+Ice.Override.ConnectTimeout=1000
+
+Ice.ThreadPool.Client.SizeMax=10
+Ice.ThreadPool.Server.SizeMax=10
+
+
