@@ -1,7 +1,7 @@
 Index: duo/dummies/duo-launch-icestorm.sh
 ===================================================================
---- duo.orig/dummies/duo-launch-icestorm.sh	2012-05-11 13:43:23.000000000 +0200
-+++ duo/dummies/duo-launch-icestorm.sh	2012-05-11 13:43:40.000000000 +0200
+--- duo.orig/dummies/duo-launch-icestorm.sh	2012-05-11 13:55:47.000000000 +0200
++++ duo/dummies/duo-launch-icestorm.sh	2012-05-11 13:58:44.000000000 +0200
 @@ -5,7 +5,7 @@
  
  rm -fr "$DB_DIR"
@@ -13,8 +13,8 @@ Index: duo/dummies/duo-launch-icestorm.sh
  
 Index: duo/dummies/icestorm.cfg
 ===================================================================
---- duo.orig/dummies/icestorm.cfg	2012-05-11 13:43:23.000000000 +0200
-+++ duo/dummies/icestorm.cfg	2012-05-11 13:43:40.000000000 +0200
+--- duo.orig/dummies/icestorm.cfg	2012-05-11 13:55:47.000000000 +0200
++++ duo/dummies/icestorm.cfg	2012-05-11 13:58:44.000000000 +0200
 @@ -1,7 +1,7 @@
  # -*- mode: conf; coding: utf-8 -*-
  
@@ -26,8 +26,8 @@ Index: duo/dummies/icestorm.cfg
  
 Index: duo/clients/client_bool.py
 ===================================================================
---- duo.orig/clients/client_bool.py	2012-05-11 13:43:23.000000000 +0200
-+++ duo/clients/client_bool.py	2012-05-11 13:43:40.000000000 +0200
+--- duo.orig/clients/client_bool.py	2012-05-11 13:55:47.000000000 +0200
++++ duo/clients/client_bool.py	2012-05-11 13:58:44.000000000 +0200
 @@ -9,7 +9,8 @@
  logging.getLogger().setLevel(logging.DEBUG)
  
@@ -46,8 +46,8 @@ Index: duo/clients/client_bool.py
 +    App().main(sys.argv, "/usr/share/duo/config/client.cfg")
 Index: duo/dummies/dummy_bool.py
 ===================================================================
---- duo.orig/dummies/dummy_bool.py	2012-05-11 13:43:23.000000000 +0200
-+++ duo/dummies/dummy_bool.py	2012-05-11 13:43:40.000000000 +0200
+--- duo.orig/dummies/dummy_bool.py	2012-05-11 13:55:47.000000000 +0200
++++ duo/dummies/dummy_bool.py	2012-05-11 13:58:44.000000000 +0200
 @@ -24,4 +24,4 @@
  
  if __name__ == "__main__":
@@ -56,8 +56,8 @@ Index: duo/dummies/dummy_bool.py
 +    sys.exit(dummy.main(sys.argv, "/usr/share/duo/config/dummy.cfg"))
 Index: duo/dummies/dummy_base.py
 ===================================================================
---- duo.orig/dummies/dummy_base.py	2012-05-11 11:56:48.000000000 +0200
-+++ duo/dummies/dummy_base.py	2012-05-11 13:47:15.000000000 +0200
+--- duo.orig/dummies/dummy_base.py	2012-05-11 13:55:47.000000000 +0200
++++ duo/dummies/dummy_base.py	2012-05-11 13:58:44.000000000 +0200
 @@ -14,8 +14,9 @@
  
  
@@ -81,3 +81,25 @@ Index: duo/dummies/dummy_base.py
  
  import DUO
  import Actor
+Index: duo/clients/duo-client-bool.sh
+===================================================================
+--- duo.orig/clients/duo-client-bool.sh	2012-05-11 12:47:53.000000000 +0200
++++ duo/clients/duo-client-bool.sh	2012-05-11 13:59:11.000000000 +0200
+@@ -1,5 +1,5 @@
+ #!/bin/sh
+ # -*- mode: sh; coding; utf-8 -*-
+ 
+-python client_bool.py "$@"
++python /usr/share/pyshared/duo/clients/client_bool.py "$@"
+ 
+Index: duo/dummies/duo-dummy-bool.sh
+===================================================================
+--- duo.orig/dummies/duo-dummy-bool.sh	2012-05-11 12:33:07.000000000 +0200
++++ duo/dummies/duo-dummy-bool.sh	2012-05-11 13:59:39.000000000 +0200
+@@ -1,5 +1,5 @@
+ #!/bin/sh
+ # -*- mode: sh; coding; utf-8 -*-
+ 
+-python dummy_bool.py "$@"
++python /usr/share/pyshared/duo/dummies/dummy_bool.py "$@"
+ 
