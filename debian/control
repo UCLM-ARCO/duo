@@ -2,14 +2,16 @@ Source: duo-slice
 Section: devel
 Priority: extra
 Maintainer: ARCO Research Group <sysadm@arco.esi.uclm.es>
-Build-Depends: debhelper (>= 7.0.50~)
-Standards-Version: 3.8.4
+Uploaders: Oscar Aceña Herrera <oscaracena@gmail.com>
+Build-Depends: debhelper (>= 7.0.50~), python
+Standards-Version: 3.9.3
 Homepage: http://arco.esi.uclm.es
 
 Package: duo-slice
 Architecture: all
-Depends: ${misc:Depends}
+Depends: ${misc:Depends}, ${python:Depends}
 Replaces: hesperia-slice
 Description: DUO slice files
  This package contains the DUO slices, developed by ARCO
- Research Group
+ Research Group, and a set of dummies and tools to help on
+ development.

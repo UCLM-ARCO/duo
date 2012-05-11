@@ -1,0 +1,4 @@
+usr/share/duo/dummies/duo-launch-icestorm.sh usr/bin/duo-launch-icestorm
+usr/share/duo/dummies/duo-dummy-bool.sh usr/bin/duo-dummy-bool
+usr/share/duo/clients/duo-client-bool.sh usr/bin/duo-client-bool
+
