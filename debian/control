@@ -3,12 +3,12 @@ Section: devel
 Priority: extra
 Maintainer: ARCO Research Group <sysadm@arco.esi.uclm.es>
 Uploaders: Oscar Aceña Herrera <oscaracena@gmail.com>
-Build-Depends: debhelper (>= 7.0.50~), python
+Build-Depends: debhelper (>= 7.0.50~), python, arco-devel
 Standards-Version: 3.9.3
 Homepage: http://arco.esi.uclm.es
 
 Package: duo-slice
-Architecture: all
+Architecture: i386
 Depends: ${misc:Depends}, ${python:Depends}
 Replaces: hesperia-slice
 Description: DUO slice files
