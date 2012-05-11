@@ -11,8 +11,8 @@ module Actor {
 //   };
 
     module IBool {
-//     interface RA extends DUO::IBool::R, DUO::Active::R, DUO::Active::W {};
 	interface RW extends DUO::IBool::R, DUO::IBool::W {};
+	interface RWA extends RW, DUO::Active::R, DUO::Active::W {};
 //     interface RWP extends RW, ASD::PropHldr {};
 //     interface RWPS extends RWP, ASD::Search {};
 //     interface RWPSA extends RWPS, DUO::Active::R, DUO::Active::W {};

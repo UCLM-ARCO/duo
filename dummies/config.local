@@ -1,0 +1,6 @@
+# -*- mode: conf; coding: utf-8 -*-
+
+# TopicManager
+IceStorm.TopicManager.Proxy=IceStorm/TopicManager -t:tcp -h 127.0.0.1 -p 10000
+
+

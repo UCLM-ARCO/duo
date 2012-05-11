@@ -29,7 +29,7 @@ import sys
 # import gtk
 # import gtk.glade
 
-import dummyBase as base
+import dummy_base as base
 
 
 # class BoolGUI(base.GUI):
@@ -69,7 +69,7 @@ class DummyBool(base.Dummy):
 
     def add_options(self):
         self.arg_parser.add_argument(
-            'interface', choices=('R', 'W', 'RW'), type=str,
+            'interface', choices=('R', 'W', 'RW', 'RWA'), type=str,
             help='interface to implement')
         self.arg_parser.add_argument(
             '--init', dest='state', type=bool, help="initial state",
@@ -102,7 +102,7 @@ class DummyBool(base.Dummy):
 
 if __name__ == "__main__":
     dummy = DummyBool()
-    sys.exit(dummy.main(sys.argv))
+    sys.exit(dummy.main(sys.argv, "config.local"))
 
 #     try:
 #         opts, args = getopt.getopt(sys.argv[1:], "",
