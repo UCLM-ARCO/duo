@@ -4,14 +4,14 @@ import logging
 import signal
 import argparse
 
-import gobject
 from gi.repository import Gtk
+from gi.repository import GObject
 
 import Ice
 import IceStorm
 
 
-Gtk.gdk.threads_init()
+#Gtk.Gdk.threads_init()
 logging.basicConfig(level=logging.DEBUG,
                     format='DUMMY|%(levelname)s: %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S',)
@@ -73,33 +73,74 @@ class Subject(object):
                     logging.error("removing observer '{0}'".format(ob))
                     self.unregister(ob)
 
-            gobject.idle_add(idle_call)
+            GObject.idle_add(idle_call)
 
 
 class GladeWrapper(object):
-    def __init__(self, filename, widget=None):
-        self._glade = gtk.glade.XML(filename, widget)
-        self._glade.signal_autoconnect(self)
+    def __init__(self, filename, widget='window'):
+        self._builder = Gtk.Builder()
+        self._builder.add_from_file(filename)
+        self._builder.connect_signals(self)
+
+        self._widget = self.wg_window
 
     def __getattr__(self, name):
         try:
             return self.__dict__[name]
         except KeyError, e:
             if name.startswith("wg_"):
-                ret = self.__glade.get_widget(name[3:])
+                ret = self._builder.get_object(name[3:])
                 if ret:
                     self.__dict__[name] = ret
                     return ret
-            raise AttributeError("{0}: {1}".format((str(self.__class__), e)))
+            raise AttributeError("{0}: {1}".format(str(self.__class__), e))
+
+
+class DummyColorBand(Gtk.DrawingArea):
+    def __init__(self):
+        Gtk.DrawingArea.__init__(self)
+        self.connect("expose-event", self.expose)
+        self.x = 20
+        self.y = 20
+
+    def expose(self, widget, event):
+        ctx = widget.window.cairo_create()
+        ctx.rectangle(event.area.x, event.area.y,
+                      event.area.width, event.area.height)
+        ctx.clip()
+        self.draw(ctx)
+        return False
+
+    def draw(self, ctx):
+        width = self.get_allocation().width
+        n = width / self.x
+
+        for i in range(0, n + 2):
+            ctx.move_to(i * self.x, 0)
+            ctx.line_to(i * self.x + self.x, 0)
+            ctx.line_to(i * self.x, self.y)
+            ctx.line_to(i * self.x - self.x, self.y)
+            ctx.close_path()
+            if i % 2:
+                ctx.set_source_rgb(1, 0.83, 0.16)
+            else:
+                ctx.set_source_rgb(0, 0, 0)
+            ctx.fill_preserve()
+            ctx.set_source_rgb(0, 0, 0)
+            ctx.stroke()
 
 
 class GUI(GladeWrapper):
     def __init__(self):
         GladeWrapper.__init__(self, "dummy.glade")
 
+        top_band = DummyColorBand()
+
+    def show(self):
+        self._widget.show_all()
+
 
 class Active_I(Subject):
-
     def __init__(self):
         self.active_observer = None
 
@@ -289,8 +330,8 @@ class Dummy(Ice.Application):
     def wait(self):
         self.shutdownOnInterrupt()
 
-        signal.signal(signal.SIGINT, gtk.main_quit)
-        gtk.main()
+        signal.signal(signal.SIGINT, Gtk.main_quit)
+        Gtk.main()
 
         ic = self.communicator()
         ic.shutdown()
