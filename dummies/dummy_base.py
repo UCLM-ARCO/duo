@@ -1,17 +1,13 @@
 # -*- mode: python; coding: utf-8 -*-
 
 import logging
-import signal
 import argparse
-
-from gi.repository import Gtk
-from gi.repository import GObject
 
 import Ice
 import IceStorm
+from gi.repository import GObject
 
 
-#Gtk.Gdk.threads_init()
 logging.basicConfig(level=logging.DEBUG,
                     format='DUMMY|%(levelname)s: %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S',)
@@ -76,76 +72,9 @@ class Subject(object):
             GObject.idle_add(idle_call)
 
 
-class GladeWrapper(object):
-    def __init__(self, filename, widget='window'):
-        self._builder = Gtk.Builder()
-        self._builder.add_from_file(filename)
-        self._builder.connect_signals(self)
-
-        self._widget = self.wg_window
-
-    def __getattr__(self, name):
-        try:
-            return self.__dict__[name]
-        except KeyError, e:
-            if name.startswith("wg_"):
-                ret = self._builder.get_object(name[3:])
-                if ret:
-                    self.__dict__[name] = ret
-                    return ret
-            raise AttributeError("{0}: {1}".format(str(self.__class__), e))
-
-
-class DummyColorBand(Gtk.DrawingArea):
-    def __init__(self):
-        Gtk.DrawingArea.__init__(self)
-        self.connect("expose-event", self.expose)
-        self.x = 20
-        self.y = 20
-
-    def expose(self, widget, event):
-        ctx = widget.window.cairo_create()
-        ctx.rectangle(event.area.x, event.area.y,
-                      event.area.width, event.area.height)
-        ctx.clip()
-        self.draw(ctx)
-        return False
-
-    def draw(self, ctx):
-        width = self.get_allocation().width
-        n = width / self.x
-
-        for i in range(0, n + 2):
-            ctx.move_to(i * self.x, 0)
-            ctx.line_to(i * self.x + self.x, 0)
-            ctx.line_to(i * self.x, self.y)
-            ctx.line_to(i * self.x - self.x, self.y)
-            ctx.close_path()
-            if i % 2:
-                ctx.set_source_rgb(1, 0.83, 0.16)
-            else:
-                ctx.set_source_rgb(0, 0, 0)
-            ctx.fill_preserve()
-            ctx.set_source_rgb(0, 0, 0)
-            ctx.stroke()
-
-
-class GUI(GladeWrapper):
-    def __init__(self):
-        GladeWrapper.__init__(self, "dummy.glade")
-
-        top_band = DummyColorBand()
-
-    def show(self):
-        self._widget.show_all()
-
-
 class Active_I(Subject):
-    def __init__(self):
-        self.active_observer = None
-
     def getObserver(self, current=None):
-        return self.active_observer
+        return getattr(self, 'observer')
 
     def setObserver(self, observer, current=None):
         self.observer = observer
@@ -316,6 +245,16 @@ class Dummy(Ice.Application):
 
         logging.info("Proxy used: '{0}'".format(self.proxy))
 
+    def get_proxy_as_string(self):
+        return self.communicator().proxyToString(self.proxy)
+
+    def get_observer_as_string(self):
+        if not self.is_duo_active():
+            raise DummyException("This dummy is not active, no observer available")
+
+        observer = self.servant.getObserver()
+        return self.communicator().proxyToString(observer)
+
     def create_gui(self):
         if self.args.nogui:
             return
@@ -329,12 +268,13 @@ class Dummy(Ice.Application):
 
     def wait(self):
         self.shutdownOnInterrupt()
-
-        signal.signal(signal.SIGINT, Gtk.main_quit)
-        Gtk.main()
-
         ic = self.communicator()
-        ic.shutdown()
+
+        if self.gui:
+            self.gui.wait()
+            ic.shutdown()
+        else:
+            ic.waitForShutdown()
 
     def build_parser(self):
         self.arg_parser = argparse.ArgumentParser(description='Dummy')
@@ -355,3 +295,6 @@ class Dummy(Ice.Application):
     def add_options(self):
         """ To implement on subclass """
         pass
+
+    def is_duo_active(self):
+        return "A" in self.args.interface

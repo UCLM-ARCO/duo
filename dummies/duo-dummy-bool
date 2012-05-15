@@ -1,0 +1,56 @@
+#!/usr/bin/env python
+# -*- mode: python; coding: utf-8 -*-
+
+import sys
+
+from dummy_base import Dummy, MetaDummy
+from dummy_ui import GUI
+
+
+class BoolGUI(GUI):
+    def __init__(self, model):
+        GUI.__init__(self, model)
+        self.wg_window.set_title("Dummy Bool")
+
+    def create_content(self):
+        self.wg_bool_on_image.set_from_file('pixmaps/bulb-true.png')
+        self.wg_bool_off_image.set_from_file('pixmaps/bulb-false.png')
+
+        widget = self.wg_bool_content
+        widget.unparent()
+        return widget
+
+    def on_bool_toogle(self, widget):
+        self._update_ui(widget.get_active())
+
+    def _update_ui(self, state):
+        if state:
+            self.wg_bool_on_image.show()
+            self.wg_bool_off_image.hide()
+        else:
+            self.wg_bool_off_image.show()
+            self.wg_bool_on_image.hide()
+
+
+class DummyBool(Dummy):
+    def add_options(self):
+        self.arg_parser.add_argument(
+            'interface', choices=('R', 'W', 'RW', 'RWA'), type=str,
+            help='interface to implement')
+        self.arg_parser.add_argument(
+            '--init', dest='state', type=bool, help="initial state",
+            default=False)
+
+    def do_create_servant(self):
+        iface = "IBool.{0}".format(self.args.interface)
+        dummyClass = MetaDummy(iface)
+        return dummyClass(self.args.state)
+
+    def do_create_gui(self):
+        return BoolGUI(self)
+
+
+
+if __name__ == "__main__":
+    dummy = DummyBool()
+    sys.exit(dummy.main(sys.argv, "dummy.cfg"))
