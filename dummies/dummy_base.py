@@ -48,6 +48,9 @@ class Subject(object):
         self.state = val
         self.notify()
 
+    def get_state(self):
+        return self.state
+
     def register(self, ob):
         logging.debug("register of '{0}'".format(ob))
         self.observers.append(ob)
@@ -58,9 +61,8 @@ class Subject(object):
             self.observers.remove(ob)
 
     def notify(self):
-        for ob in self.observers:
-
-            def idle_call():
+        def idle_call():
+            for ob in self.observers:
                 try:
                     logging.debug("notify on '{0}'".format(ob))
                     ob.update()
@@ -69,7 +71,7 @@ class Subject(object):
                     logging.error("removing observer '{0}'".format(ob))
                     self.unregister(ob)
 
-            GObject.idle_add(idle_call)
+        GObject.idle_add(idle_call)
 
 
 class Active_I(Subject):
@@ -87,12 +89,9 @@ class Active_I(Subject):
 
 class Dummy_R(Subject):
     def get(self, current=None):
-        logging.info("-> get()")
-
-        if self.get_state:
-            return self.get_state()
-
-        return self.state
+        state = self.get_state()
+        logging.info(" -- received get(), return: {0}".format(state))
+        return state
 
 
 class Dummy_W(Subject):
@@ -101,8 +100,7 @@ class Dummy_W(Subject):
         oid = ic.identityToString(oid)
         logging.info(" -- received set({0}, '{1}')".format(val, oid))
 
-        self.state = val
-        self.notify()
+        self.set_state(val)
 
 
 class Reactive(object):
@@ -112,8 +110,9 @@ class Reactive(object):
         self.model.register(self)
 
     def update(self):
-        self.publisher.set(self.model.state, Ice.Identity())
-        logging.info(' -- observer.set({0})'.format(self.model.state))
+        state = self.model.get_state()
+        self.publisher.set(state, Ice.Identity())
+        logging.info(' -- observer.set({0})'.format(state))
 
 
 class DUOCaster(object):
@@ -126,8 +125,7 @@ class DUOCaster(object):
 class MetaDummy(type):
     def __new__(metacls, name):
 
-        def init(obj, val=None, cb=None):
-            obj.get_state = cb
+        def init(obj, val=None):
             obj.state = val
 
         duo_ifaces = {'R': Dummy_R, 'W': Dummy_W, 'A': Active_I}
@@ -213,7 +211,7 @@ class Dummy(Ice.Application):
         self.servant.setObserver(publisher)
 
     def get_servant_topic(self):
-        topic_mgr = self.get_ice_storm()
+        topic_mgr = self.get_topic_manager()
         topic_name = Ice.generateUUID()
 
         try:
@@ -224,7 +222,7 @@ class Dummy(Ice.Application):
         logging.info("topic proxy: '{0}'".format(topic))
         return topic
 
-    def get_ice_storm(self):
+    def get_topic_manager(self):
         ic = self.communicator()
         topic_mgr = ic.propertyToProxy("IceStorm.TopicManager.Proxy")
         topic_mgr = IceStorm.TopicManagerPrx.checkedCast(topic_mgr)
@@ -298,3 +296,12 @@ class Dummy(Ice.Application):
 
     def is_duo_active(self):
         return "A" in self.args.interface
+
+    def set_state(self, state):
+        self.servant.set_state(state)
+
+    def get_state(self):
+        return self.servant.get_state()
+
+    def register(self, observer):
+        self.servant.register(observer)

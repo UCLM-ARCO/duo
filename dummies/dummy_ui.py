@@ -1,10 +1,11 @@
 # -*- mode: python; coding: utf-8 -*-
 
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk, GObject
 import signal
+import logging
 
 
-# Gtk.Gdk.threads_init()
+Gdk.threads_init()
 
 
 class DummyColorBand(Gtk.DrawingArea):
@@ -32,6 +33,19 @@ class DummyColorBand(Gtk.DrawingArea):
             ctx.stroke()
 
 
+class TextAreaStream(file):
+    def __init__(self, textview):
+        self.textview = textview
+        self.buffer = textview.get_buffer()
+
+    def write(self, msg):
+        GObject.idle_add(self.buffer.insert_at_cursor, msg)
+        GObject.idle_add(self.textview.scroll_mark_onscreen, self.buffer.get_insert())
+
+    def flush(self):
+        pass
+
+
 class GladeWrapper(object):
     def __init__(self, filename, widget='window'):
         self._builder = Gtk.Builder()
@@ -56,6 +70,7 @@ class GUI(GladeWrapper):
     def __init__(self, model):
         GladeWrapper.__init__(self, "dummy.glade")
         self._model = model
+        self._model.register(self)
 
         self._setup_ui()
         self._add_dummy_bands()
@@ -71,6 +86,12 @@ class GUI(GladeWrapper):
             self.wg_observer_proxy.set_text(
                 self._model.get_observer_as_string())
             self.wg_observer_proxy.show()
+
+        self._setup_logging()
+
+    def _setup_logging(self):
+        handler = logging.StreamHandler(TextAreaStream(self.wg_log))
+        logging.getLogger().addHandler(handler)
 
     def create_content(self):
         """To implement on children"""

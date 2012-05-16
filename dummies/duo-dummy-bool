@@ -20,8 +20,12 @@ class BoolGUI(GUI):
         widget.unparent()
         return widget
 
+    def update(self):
+        self._update_ui(self._model.get_state())
+
     def on_bool_toogle(self, widget):
         self._update_ui(widget.get_active())
+        self._update_model(widget.get_active())
 
     def _update_ui(self, state):
         if state:
@@ -30,6 +34,9 @@ class BoolGUI(GUI):
         else:
             self.wg_bool_off_image.show()
             self.wg_bool_on_image.hide()
+
+    def _update_model(self, state):
+        self._model.set_state(state)
 
 
 class DummyBool(Dummy):
