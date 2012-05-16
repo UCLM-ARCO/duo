@@ -268,11 +268,11 @@ class Dummy(Ice.Application):
         self.shutdownOnInterrupt()
         ic = self.communicator()
 
-        if self.gui:
+        if self.args.nogui:
+            ic.waitForShutdown()
+        else:
             self.gui.wait()
             ic.shutdown()
-        else:
-            ic.waitForShutdown()
 
     def build_parser(self):
         self.arg_parser = argparse.ArgumentParser(description='Dummy')
