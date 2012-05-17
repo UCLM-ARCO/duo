@@ -9,7 +9,7 @@ Homepage: http://arco.esi.uclm.es
 
 Package: duo-slice
 Architecture: i386
-Depends: ${misc:Depends}, ${python:Depends}
+Depends: ${misc:Depends}, ${python:Depends}, istaf
 Replaces: hesperia-slice
 Description: DUO slice files
  This package contains the DUO slices, developed by ARCO

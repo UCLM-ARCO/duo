@@ -1,0 +1,16 @@
+#!/bin/sh
+# -*- mode: sh; coding: utf-8 -*-
+
+DB_DIR=/tmp/dummy-istaf-db
+
+duo-launch-icestorm &
+sleep .5
+IS_PID=$(pidof icebox | awk '{print $NF}')
+
+rm -fr "$DB_DIR"
+mkdir -p  "$DB_DIR"
+pyicebox --Ice.Config=istaf.cfg
+
+kill $IS_PID
+
+

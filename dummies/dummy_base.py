@@ -201,7 +201,8 @@ class Dummy(Ice.Application):
     def post_setup_servant(self):
         if 'A' in self.args.interface:
             self.setup_servant_as_active()
-        if not self.args.suscribe is None:
+        if (not self.args.topic_suscribe is None
+            or not self.args.active_suscribe is None):
             self.setup_servant_as_observer()
 
     def setup_servant_as_active(self):
@@ -229,10 +230,21 @@ class Dummy(Ice.Application):
         return topic_mgr
 
     def setup_servant_as_observer(self):
-        ic = self.communicator()
-        topic = ic.stringToProxy(self.args.suscribe)
-        topic = IceStorm.TopicPrx.checkedCast(topic)
+        topic = self._get_topic_to_suscribe()
         topic.subscribeAndGetPublisher({}, self.proxy)
+
+    def _get_topic_to_suscribe(self):
+        ic = self.communicator()
+        if self.args.topic_suscribe:
+            topic = ic.stringToProxy(self.args.topic_suscribe)
+        else:
+            active = ic.stringToProxy(self.args.active_suscribe)
+            active = DUO.Active.RPrx.uncheckedCast(active)
+            publisher = active.getObserver()
+            topic = publisher.ice_facet('topic')
+
+        topic = IceStorm.TopicPrx.checkedCast(topic)
+        return topic
 
     def register_servant(self):
         if not self.args.identity:
@@ -286,7 +298,11 @@ class Dummy(Ice.Application):
             '--host', help='ip where to listen')
 
         self.arg_parser.add_argument(
-            '--topic-suscribe', help='topic on which suscribe servant')
+            '--topic-suscribe',
+            help='topic on which suscribe servant')
+        self.arg_parser.add_argument(
+            '--active-suscribe',
+            help='publisher of an istaf topic, on which suscribe servant')
 
         self.arg_parser.add_argument(
             '--no-gui', dest='nogui', action='store_true',
