@@ -1,4 +1,4 @@
-Source: duo-slice
+Source: duo
 Section: devel
 Priority: extra
 Maintainer: ARCO Research Group <sysadm@arco.esi.uclm.es>
@@ -7,11 +7,11 @@ Build-Depends: debhelper (>= 7.0.50~), python, arco-devel
 Standards-Version: 3.9.3
 Homepage: http://arco.esi.uclm.es
 
-Package: duo-slice
+Package: duo
 Architecture: i386
 Depends: ${misc:Depends}, ${python:Depends}, istaf
-Replaces: hesperia-slice
-Description: DUO slice files
+Replaces: hesperia-slice, duo-slice
+Description: Arco DUO interfaces: slices, dummies, clients, tools, etc.
  This package contains the DUO slices, developed by ARCO
  Research Group, and a set of dummies and tools to help on
  development.

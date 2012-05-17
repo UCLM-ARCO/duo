@@ -1,8 +1,6 @@
 # -*- mode: python; coding: utf-8 -*-
 
 from gi.repository import Gtk, GObject
-
-import signal
 import logging
 
 
@@ -112,4 +110,4 @@ class GUI(GladeWrapper):
         self._widget.show_all()
 
     def on_quit(self, *args):
-        Gtk.main_quit()
+        self._model.loop.quit()
