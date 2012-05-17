@@ -1,0 +1,38 @@
+# -*- mode: python; coding: utf-8 -*-
+
+import signal
+
+
+icestorm_port = 1000
+icestorm = TestBG(
+    pre = Not(OpenPort(icestorm_port)),
+    cmd = 'istaf')
+
+active_port = 1234
+active = TestBG(
+    pre = [Not(OpenPort(active_port)),
+           Poll(OpenPort(1000), 0.1)],
+    cwd = '$basedir/dummies',
+    signal = signal.SIGINT,
+    cmd = './duo-dummy-bool --host localhost --port {0} --id t --no-gui RWA'.
+    format(active_port),
+    post = StdErrContains('received set(True'))
+active_proxy = "t -t:tcp -p {0}".format(active_port)
+
+observer_port = 1235
+observer = TestBG(
+    pre = Not(OpenPort(observer_port)),
+    cwd = '$basedir/dummies',
+    signal = signal.SIGINT,
+    cmd = './duo-dummy-bool --active-suscribe {} --host localhost --port {} --id t --no-gui W'.
+    format(active_proxy, observer_port),
+    post = StdErrContains('received set(True'))
+
+client = Test(
+    pre = Poll(OpenPort(active_port), .05),
+    cwd = '$basedir/clients',
+    cmd = "./duo-client-bool '{0}' --set True".format(active_proxy))
+
+
+
+

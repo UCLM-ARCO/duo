@@ -1,11 +1,12 @@
 # -*- mode: python; coding: utf-8 -*-
 
-from gi.repository import Gtk, Gdk, GObject
+from gi.repository import Gtk, GObject
+
 import signal
 import logging
 
 
-Gdk.threads_init()
+GObject.threads_init()
 
 
 class DummyColorBand(Gtk.DrawingArea):
@@ -109,10 +110,6 @@ class GUI(GladeWrapper):
 
     def show(self):
         self._widget.show_all()
-
-    def wait(self):
-        signal.signal(signal.SIGINT, Gtk.main_quit)
-        Gtk.main()
 
     def on_quit(self, *args):
         Gtk.main_quit()

@@ -265,14 +265,16 @@ class Dummy(Ice.Application):
         raise NotImplementedError
 
     def wait(self):
-        self.shutdownOnInterrupt()
+        self.callbackOnInterrupt()
         ic = self.communicator()
 
-        if self.args.nogui:
-            ic.waitForShutdown()
-        else:
-            self.gui.wait()
-            ic.shutdown()
+        self.loop = GObject.MainLoop()
+        self.loop.run()
+
+        ic.shutdown()
+
+    def interruptCallback(self, args):
+        GObject.idle_add(self.loop.quit)
 
     def build_parser(self):
         self.arg_parser = argparse.ArgumentParser(description='Dummy')
@@ -284,7 +286,7 @@ class Dummy(Ice.Application):
             '--host', help='ip where to listen')
 
         self.arg_parser.add_argument(
-            '--suscribe', help='topic on which suscribe servant')
+            '--topic-suscribe', help='topic on which suscribe servant')
 
         self.arg_parser.add_argument(
             '--no-gui', dest='nogui', action='store_true',
