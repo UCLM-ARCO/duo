@@ -4,7 +4,7 @@
 import sys
 
 from dummy_base import Dummy, MetaDummy
-from dummy_ui import GUI
+from dummy_gui import GUI
 
 
 class BoolGUI(GUI):

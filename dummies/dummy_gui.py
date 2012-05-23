@@ -71,10 +71,10 @@ class GUI(GladeWrapper):
         self._model = model
         self._model.register(self)
 
-        self._setup_ui()
+        self._setup_gui()
         self._add_dummy_bands()
 
-    def _setup_ui(self):
+    def _setup_gui(self):
         widget = self.create_content()
         self.wg_content.pack_start(widget, False, False, 0)
         self.wg_proxy.set_text(
@@ -111,3 +111,6 @@ class GUI(GladeWrapper):
 
     def on_quit(self, *args):
         self._model.loop.quit()
+
+    def __str__(self):
+        return self.__class__.__name__

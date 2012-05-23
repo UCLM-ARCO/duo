@@ -40,6 +40,7 @@ class DummyException(Exception):
         self.message = msg
 
 
+# FIXME: inherit comodity.pattern.Observable
 class Subject(object):
     observers = []
     state = None
@@ -75,12 +76,15 @@ class Subject(object):
 
 
 class Active_I(Subject):
-    def getObserver(self, current=None):
-        return getattr(self, 'observer')
+    def __init__(self):
+        self.publisher = None
 
-    def setObserver(self, observer, current=None):
-        self.observer = observer
-        self.reactive = Reactive(self, self.observer)
+    def getObserver(self, current=None):
+        return self.publisher
+
+    def setObserver(self, publisher, current=None):
+        self.publisher = publisher
+        self.reactive = Reactive(self, self.publisher)
 
     def ice_ping(self, current=None):
         logging.info("received a ping()")
@@ -114,6 +118,9 @@ class Reactive(object):
         self.publisher.set(state, Ice.Identity())
         logging.info(' -- observer.set({0})'.format(state))
 
+    def __repr__(self):
+        return "Reactive({0})".format(self.model)
+
 
 class DUOCaster(object):
     def cast_proxy(self, proxy):
@@ -132,19 +139,20 @@ class MetaDummy(type):
         bases = [duo_ifaces[i] for i in name.split('.')[1]]
         bases.append(DUOCaster)
 
+        if len(name.split('.')[1]) == 1:
+            module = "DUO"
+        else:
+            module = "Actor"
+
         base = None
         try:
-            if len(name.split('.')[1]) == 1:
-                exec "base = DUO.{0}".format(name)
-            else:
-                exec "base = Actor.{0}".format(name)
+            exec "base = {0}.{1}".format(module, name)
         except AttributeError:
             raise DummyException("there is no {0} module!".format(name))
 
         bases.append(base)
-        return type.__new__(
-            metacls, name, tuple(bases),
-            {'__init__': init, 'base': base})
+        return type.__new__(metacls, name, tuple(bases),
+                            {'__init__': init, 'base': base})
 
 
 class Dummy(Ice.Application):
@@ -175,10 +183,10 @@ class Dummy(Ice.Application):
 
     def build_endpoint_string(self):
         self.endp = "tcp"
-        if not self.args.port is None:
+        if self.args.port is not None:
             self.endp += " -p {0}".format(self.args.port)
 
-        if not self.args.host is None:
+        if self.args.host is not None:
             self.endp += " -h {0}".format(self.args.host)
 
     def create_adapter(self):
@@ -201,8 +209,9 @@ class Dummy(Ice.Application):
     def post_setup_servant(self):
         if 'A' in self.args.interface:
             self.setup_servant_as_active()
-        if (not self.args.topic_suscribe is None
-            or not self.args.active_suscribe is None):
+
+        if (self.args.topic_suscribe is not None
+            or self.args.active_suscribe is not None):
             self.setup_servant_as_observer()
 
     def setup_servant_as_active(self):
@@ -253,7 +262,7 @@ class Dummy(Ice.Application):
             oid = self.communicator().stringToIdentity(self.args.identity)
             self.proxy = self.adapter.add(self.servant, oid)
 
-        logging.info("Proxy used: '{0}'".format(self.proxy))
+        logging.info("dummy proxy: '{0}'".format(self.proxy))
 
     def get_proxy_as_string(self):
         return self.communicator().proxyToString(self.proxy)
