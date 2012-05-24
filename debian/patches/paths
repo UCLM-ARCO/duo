@@ -1,7 +1,7 @@
 Index: duo/dummies/icestorm.cfg
 ===================================================================
---- duo.orig/dummies/icestorm.cfg	2012-05-17 13:39:16.000000000 +0200
-+++ duo/dummies/icestorm.cfg	2012-05-17 13:43:23.000000000 +0200
+--- duo.orig/dummies/icestorm.cfg	2012-05-24 11:13:53.000000000 +0200
++++ duo/dummies/icestorm.cfg	2012-05-24 11:14:29.000000000 +0200
 @@ -1,7 +1,7 @@
  # -*- mode: conf; coding: utf-8 -*-
  
@@ -13,8 +13,8 @@ Index: duo/dummies/icestorm.cfg
  
 Index: duo/dummies/dummy_base.py
 ===================================================================
---- duo.orig/dummies/dummy_base.py	2012-05-17 13:39:16.000000000 +0200
-+++ duo/dummies/dummy_base.py	2012-05-17 13:43:23.000000000 +0200
+--- duo.orig/dummies/dummy_base.py	2012-05-24 11:13:53.000000000 +0200
++++ duo/dummies/dummy_base.py	2012-05-24 11:14:29.000000000 +0200
 @@ -14,12 +14,13 @@
  
  
@@ -35,46 +35,33 @@ Index: duo/dummies/dummy_base.py
  import Actor
 Index: duo/clients/duo-client-bool
 ===================================================================
---- duo.orig/clients/duo-client-bool	2012-05-17 13:39:16.000000000 +0200
-+++ duo/clients/duo-client-bool	2012-05-17 13:43:45.000000000 +0200
-@@ -9,7 +9,7 @@
- logging.getLogger().setLevel(logging.DEBUG)
+--- duo.orig/clients/duo-client-bool	2012-05-24 11:13:53.000000000 +0200
++++ duo/clients/duo-client-bool	2012-05-24 11:14:29.000000000 +0200
+@@ -5,7 +5,7 @@
+ import logging
+ import Ice
  
- slice_path = Ice.getSliceDir()
--Ice.loadSlice("-I{0} -I.. --all ../slice/DUO.ice".format(slice_path))
-+Ice.loadSlice("-I{0} -I{1} --all {1}/DUO.ice".format(slice_path, '/usr/share/duo/slice'))
+-from client_base import ClientBase, ClientException
++from duo.clients import ClientBase, ClientException
  import DUO
  
  
-@@ -86,4 +86,4 @@
+@@ -35,4 +35,4 @@
  
  
  if __name__ == "__main__":
--    App().main(sys.argv, "client.cfg")
-+    App().main(sys.argv, "/etc/duo/client.cfg")
-Index: duo/dummies/dummy_ui.py
-===================================================================
---- duo.orig/dummies/dummy_ui.py	2012-05-17 13:39:16.000000000 +0200
-+++ duo/dummies/dummy_ui.py	2012-05-17 13:43:23.000000000 +0200
-@@ -69,7 +69,7 @@
- 
- class GUI(GladeWrapper):
-     def __init__(self, model):
--        GladeWrapper.__init__(self, "dummy.glade")
-+        GladeWrapper.__init__(self, "/usr/share/duo/dummies/dummy.glade")
-         self._model = model
-         self._model.register(self)
- 
+-    BoolClient().main(sys.argv, "client.cfg")
++    BoolClient().main(sys.argv, "/etc/duo/client.cfg")
 Index: duo/dummies/duo-dummy-bool
 ===================================================================
---- duo.orig/dummies/duo-dummy-bool	2012-05-17 13:39:16.000000000 +0200
-+++ duo/dummies/duo-dummy-bool	2012-05-17 13:43:23.000000000 +0200
+--- duo.orig/dummies/duo-dummy-bool	2012-05-24 11:13:53.000000000 +0200
++++ duo/dummies/duo-dummy-bool	2012-05-24 11:14:29.000000000 +0200
 @@ -3,8 +3,7 @@
  
  import sys
  
 -from dummy_base import Dummy, MetaDummy
--from dummy_ui import GUI
+-from dummy_gui import GUI
 +from duo.dummies import Dummy, MetaDummy, GUI
  
  
@@ -98,8 +85,8 @@ Index: duo/dummies/duo-dummy-bool
 +    sys.exit(dummy.main(sys.argv, "/etc/duo/dummy.cfg"))
 Index: duo/dummies/duo-launch-icestorm
 ===================================================================
---- duo.orig/dummies/duo-launch-icestorm	2012-05-17 13:39:16.000000000 +0200
-+++ duo/dummies/duo-launch-icestorm	2012-05-17 13:43:23.000000000 +0200
+--- duo.orig/dummies/duo-launch-icestorm	2012-05-24 11:13:53.000000000 +0200
++++ duo/dummies/duo-launch-icestorm	2012-05-24 11:14:29.000000000 +0200
 @@ -5,7 +5,7 @@
  
  rm -fr "$DB_DIR"
@@ -111,8 +98,8 @@ Index: duo/dummies/duo-launch-icestorm
  
 Index: duo/dummies/duo-launch-istaf
 ===================================================================
---- duo.orig/dummies/duo-launch-istaf	2012-05-17 13:39:16.000000000 +0200
-+++ duo/dummies/duo-launch-istaf	2012-05-17 13:43:23.000000000 +0200
+--- duo.orig/dummies/duo-launch-istaf	2012-05-24 11:13:53.000000000 +0200
++++ duo/dummies/duo-launch-istaf	2012-05-24 11:14:29.000000000 +0200
 @@ -9,7 +9,7 @@
  
  rm -fr "$DB_DIR"
@@ -124,8 +111,8 @@ Index: duo/dummies/duo-launch-istaf
  
 Index: duo/dummies/istaf.cfg
 ===================================================================
---- duo.orig/dummies/istaf.cfg	2012-05-17 13:39:16.000000000 +0200
-+++ duo/dummies/istaf.cfg	2012-05-17 13:43:23.000000000 +0200
+--- duo.orig/dummies/istaf.cfg	2012-05-24 11:13:53.000000000 +0200
++++ duo/dummies/istaf.cfg	2012-05-24 11:14:29.000000000 +0200
 @@ -1,7 +1,7 @@
  # -*- mode: conf; coding: utf-8 -*-
  
@@ -135,3 +122,68 @@ Index: duo/dummies/istaf.cfg
  IceBox.ServiceManager.Endpoints = tcp -p 21000
  IceBox.PrintServicesReady = ISTAF Service
  
+Index: duo/clients/client_base.py
+===================================================================
+--- duo.orig/clients/client_base.py	2012-05-24 11:13:53.000000000 +0200
++++ duo/clients/client_base.py	2012-05-24 11:14:29.000000000 +0200
+@@ -8,7 +8,7 @@
+ logging.getLogger().setLevel(logging.DEBUG)
+ 
+ slice_path = Ice.getSliceDir()
+-Ice.loadSlice("-I{0} -I.. --all ../slice/DUO.ice".format(slice_path))
++Ice.loadSlice("-I{0} -I{1} --all {1}/DUO.ice".format(slice_path, '/usr/share/duo/slice'))
+ 
+ 
+ def closeOnSystemExit(mth):
+Index: duo/clients/duo-client-byte
+===================================================================
+--- duo.orig/clients/duo-client-byte	2012-05-24 11:13:53.000000000 +0200
++++ duo/clients/duo-client-byte	2012-05-24 11:14:29.000000000 +0200
+@@ -5,7 +5,7 @@
+ import logging
+ import Ice
+ 
+-from client_base import ClientBase, ClientException
++from duo.clients import ClientBase, ClientException
+ import DUO
+ 
+ 
+@@ -37,4 +37,4 @@
+ 
+ 
+ if __name__ == "__main__":
+-    ByteClient().main(sys.argv, "client.cfg")
++    ByteClient().main(sys.argv, "/etc/duo/client.cfg")
+Index: duo/dummies/dummy_gui.py
+===================================================================
+--- duo.orig/dummies/dummy_gui.py	2012-05-24 11:13:53.000000000 +0200
++++ duo/dummies/dummy_gui.py	2012-05-24 11:14:29.000000000 +0200
+@@ -67,7 +67,7 @@
+ 
+ class GUI(GladeWrapper):
+     def __init__(self, model):
+-        GladeWrapper.__init__(self, "dummy.glade")
++        GladeWrapper.__init__(self, "/usr/share/duo/dummies/dummy.glade")
+         self._model = model
+         self._model.register(self)
+ 
+Index: duo/dummies/duo-dummy-byte
+===================================================================
+--- duo.orig/dummies/duo-dummy-byte	2012-05-24 11:13:53.000000000 +0200
++++ duo/dummies/duo-dummy-byte	2012-05-24 11:14:46.000000000 +0200
+@@ -3,8 +3,7 @@
+ 
+ import sys
+ 
+-from dummy_base import Dummy, MetaDummy
+-from dummy_gui import GUI
++from duo.dummies import Dummy, MetaDummy, GUI
+ 
+ 
+ class ByteGUI(GUI):
+@@ -45,4 +44,4 @@
+ 
+ if __name__ == "__main__":
+     dummy = DummyByte()
+-    sys.exit(dummy.main(sys.argv, "dummy.cfg"))
++    sys.exit(dummy.main(sys.argv, "/etc/duo/dummy.cfg"))

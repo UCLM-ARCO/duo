@@ -1,3 +1,9 @@
+duo (0.4-1) unstable; urgency=low
+
+  * New upstream release: added dummy and client for DUO.IByte
+
+ -- Oscar Aceña Herrera <oscaracena@gmail.com>  Thu, 24 May 2012 11:04:23 +0200
+
 duo (0.3-1) unstable; urgency=low
 
   * New upstream release: added Active support and GUI
