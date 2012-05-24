@@ -1,0 +1,48 @@
+#!/usr/bin/env python
+# -*- mode: python; coding: utf-8 -*-
+
+import sys
+
+from dummy_base import Dummy, MetaDummy
+from dummy_gui import GUI
+
+
+class ByteGUI(GUI):
+    def __init__(self, model):
+        GUI.__init__(self, model)
+        self.wg_window.set_title("Dummy Byte")
+
+    def create_content(self):
+        self.wg_byte_content.unparent()
+        return self.wg_byte_content
+
+    def update(self):
+        state = self._model.get_state()
+        self.wg_byte_spin.set_value(state)
+
+    def on_value_changed(self, widget):
+        state = self.wg_byte_spin.get_value_as_int()
+        self._model.set_state(state)
+
+
+class DummyByte(Dummy):
+    def add_options(self):
+        self.arg_parser.add_argument(
+            'interface', choices=('R', 'W', 'RW', 'RWA'), type=str,
+            help='interface to implement')
+        self.arg_parser.add_argument(
+            '--init', dest='state', type=int, help="initial state",
+            default=False)
+
+    def do_create_servant(self):
+        iface = "IByte.{0}".format(self.args.interface)
+        dummyClass = MetaDummy(iface)
+        return dummyClass(self.args.state)
+
+    def do_create_gui(self):
+        return ByteGUI(self)
+
+
+if __name__ == "__main__":
+    dummy = DummyByte()
+    sys.exit(dummy.main(sys.argv, "dummy.cfg"))

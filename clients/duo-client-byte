@@ -1,0 +1,40 @@
+#!/usr/bin/env python
+# -*- mode: python; coding: utf-8 -*-
+
+import sys
+import logging
+import Ice
+
+from client_base import ClientBase
+import DUO
+
+
+class ByteClient(ClientBase):
+    def add_options(self):
+        group = self.arg_parser.add_mutually_exclusive_group(required=True)
+        group.add_argument(
+            '--set', type=int, help="set object's value")
+        group.add_argument(
+            '--get', action='store_true', help="get object's value")
+
+    def do_set(self):
+        proxy = DUO.IByte.WPrx.checkedCast(self.proxy)
+        if proxy is None:
+            raise ClientException("given proxy is not an IByte.W")
+
+        if self.args.set < 0 or self.args.set > 255:
+            raise ClientException("value is not in range [0, 255]")
+
+        proxy.set(self.args.set, Ice.Identity())
+
+    def do_get(self):
+        proxy = DUO.IByte.RPrx.checkedCast(self.proxy)
+        if proxy is None:
+            raise ClientException("given proxy is not an IByte.R")
+
+        value = proxy.get()
+        logging.info("Value: {0}".format(value))
+
+
+if __name__ == "__main__":
+    ByteClient().main(sys.argv, "client.cfg")

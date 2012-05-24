@@ -18,13 +18,13 @@ module Actor {
 //     interface RWPSA extends RWPS, DUO::Active::R, DUO::Active::W {};
    };
 
-//   module IByte {
-//     interface RA extends DUO::IByte::R, DUO::Active::R, DUO::Active::W {};
-//     interface RW extends DUO::IByte::R, DUO::IByte::W {};
+    module IByte {
+	interface RW extends DUO::IByte::R, DUO::IByte::W {};
+	interface RWA extends RW, DUO::Active::R, DUO::Active::W {};
 //     interface RWP extends RW, ASD::PropHldr {};
 //     interface RWPS extends RWP, ASD::Search {};
 //     interface RWPSA extends RWPS, DUO::Active::R, DUO::Active::W {};
-//   };
+   };
 
 //   module IInt {
 //     interface RA extends DUO::IInt::R, DUO::Active::R, DUO::Active::W {};
