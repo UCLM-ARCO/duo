@@ -16,6 +16,8 @@ class BoolGUI(GUI):
         self.wg_bool_on_image.set_from_file('pixmaps/bulb-true.png')
         self.wg_bool_off_image.set_from_file('pixmaps/bulb-false.png')
 
+        self.wg_bool_button.connect('toggled', self.on_bool_toogle)
+
         widget = self.wg_bool_content
         widget.unparent()
         return widget

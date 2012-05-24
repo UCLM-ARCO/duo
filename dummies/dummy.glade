@@ -28,13 +28,12 @@
                 <property name="vexpand">True</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkToggleButton" id="togglebutton1">
+                  <object class="GtkToggleButton" id="bool_button">
                     <property name="use_action_appearance">False</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="use_action_appearance">False</property>
-                    <signal name="toggled" handler="on_bool_toogle" swapped="no"/>
                     <child>
                       <object class="GtkBox" id="box2">
                         <property name="visible">True</property>
@@ -119,14 +118,13 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="button1">
+                  <object class="GtkButton" id="byte_button">
                     <property name="use_action_appearance">False</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="margin_left">6</property>
                     <property name="use_action_appearance">False</property>
-                    <signal name="clicked" handler="on_value_changed" swapped="no"/>
                     <child>
                       <object class="GtkImage" id="image1">
                         <property name="visible">True</property>

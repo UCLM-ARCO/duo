@@ -13,6 +13,8 @@ class ByteGUI(GUI):
         self.wg_window.set_title("Dummy Byte")
 
     def create_content(self):
+        self.wg_byte_button.connect('clicked', self.on_value_changed)
+
         self.wg_byte_content.unparent()
         return self.wg_byte_content
 
