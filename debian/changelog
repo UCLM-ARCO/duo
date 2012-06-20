@@ -1,3 +1,9 @@
+duo (1.20120620-1) unstable; urgency=low
+
+  * New release
+
+ -- David Villa Alises <David.Villa@gmail.com>  Wed, 20 Jun 2012 12:33:30 +0200
+
 duo (0.4-1) unstable; urgency=low
 
   * New upstream release: added dummy and client for DUO.IByte
@@ -12,7 +18,7 @@ duo (0.3-1) unstable; urgency=low
 
 duo (0.2-1) unstable; urgency=low
 
-  * New upstream release: added dummies and clients
+  * New upstream release: added dummy and clients
 
  -- Oscar Aceña Herrera <oscaracena@gmail.com>  Fri, 11 May 2012 14:08:43 +0200
 
@@ -21,4 +27,3 @@ duo (0.1-1) unstable; urgency=low
   * Initial release
 
  -- Oscar Aceña Herrera <oscaracena@gmail.com>  Wed, 02 Nov 2011 11:33:37 +0000
-

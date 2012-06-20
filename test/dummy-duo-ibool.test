@@ -4,7 +4,7 @@ import signal
 port = 1234
 dummy = TestBG(
     pre = Not(OpenPort(port)),
-    cwd = '$basedir/dummies',
+    cwd = '$basedir/dummy',
     signal = signal.SIGINT,
     cmd = './duo-dummy-bool --host localhost --port {port} --id test --no-gui W'.
     format(**locals()),
@@ -15,7 +15,3 @@ client = Test(
     pre = Poll(OpenPort(port), .05),
     cwd = '$basedir/clients',
     cmd = "./duo-client-bool '{0}' --set True".format(proxy))
-
-
-
-
