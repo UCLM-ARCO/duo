@@ -1,5 +1,6 @@
 # -*- mode: makefile, coding: utf-8 -*-
 
+CXX=g++-4.6
 include arco/slice.mk
 
 install:: clean
@@ -9,4 +10,3 @@ install:: clean
 .PHONY: clean
 clean::
 	$(RM) *.o *.h *.cpp *~
-

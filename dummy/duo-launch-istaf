@@ -9,8 +9,7 @@ IS_PID=$(pidof icebox | awk '{print $NF}')
 
 rm -fr "$DB_DIR"
 mkdir -p  "$DB_DIR"
+grep IceStorm.TopicManager.Proxy dummy.cfg
 pyicebox --Ice.Config=istaf.cfg
 
 kill $IS_PID
-
-
