@@ -35,4 +35,4 @@ class BoolClient(ClientBase):
 
 
 if __name__ == "__main__":
-    BoolClient().main(sys.argv, "client.cfg")
+    BoolClient().main(sys.argv, "../servers/icestorm-client.cfg")

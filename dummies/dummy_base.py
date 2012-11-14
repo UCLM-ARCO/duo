@@ -234,7 +234,7 @@ class Dummy(Ice.Application):
 
     def get_topic_manager(self):
         ic = self.communicator()
-        topic_mgr = ic.propertyToProxy("IceStorm.TopicManager.Proxy")
+        topic_mgr = ic.propertyToProxy("ISTopicAsFacet.TopicManager.Proxy")
         topic_mgr = IceStorm.TopicManagerPrx.checkedCast(topic_mgr)
         return topic_mgr
 

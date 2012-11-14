@@ -59,7 +59,6 @@ class DummyBool(Dummy):
         return BoolGUI(self)
 
 
-
 if __name__ == "__main__":
     dummy = DummyBool()
-    sys.exit(dummy.main(sys.argv, "dummy.cfg"))
+    sys.exit(dummy.main(sys.argv, "../servers/istaf-client.cfg"))

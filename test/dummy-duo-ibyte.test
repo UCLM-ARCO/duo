@@ -4,7 +4,7 @@ import signal
 port = 1234
 dummy = TestBG(
     pre = Not(OpenPort(port)),
-    cwd = '$basedir/dummy',
+    cwd = '$basedir/dummies',
     signal = signal.SIGINT,
     cmd = './duo-dummy-byte --host localhost --port {port} --id test --no-gui W'.
     format(**locals()),

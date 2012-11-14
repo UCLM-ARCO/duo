@@ -1,5 +1,5 @@
---- a/dummy/icestorm.cfg
-+++ b/dummy/icestorm.cfg
+--- a/servers/icestorm.cfg
++++ b/servers/icestorm.cfg
 @@ -1,7 +1,7 @@
  # -*- mode: conf; coding: utf-8 -*-
  
@@ -9,8 +9,8 @@
  IceBox.ServiceManager.Endpoints = tcp -h 127.0.0.1 -p 20000
  IceBox.PrintServicesReady = IceStorm Service
  
---- a/dummy/dummy_base.py
-+++ b/dummy/dummy_base.py
+--- a/dummies/dummy_base.py
++++ b/dummies/dummy_base.py
 @@ -14,12 +14,13 @@
  
  
@@ -18,7 +18,7 @@
 -    string = '-I{0} -I. -I../slice --all {1}'
 -    Ice.loadSlice(string.format(Ice.getSliceDir(), name))
 +    prefix = "/usr/share/duo"
-+    string = '-I{0} -I{1}/dummy -I{1}/slice --all {2}'
++    string = '-I{0} -I{1}/dummies -I{1}/slice --all {2}'
 +    Ice.loadSlice(string.format(Ice.getSliceDir(), prefix, name))
  
  
@@ -44,10 +44,10 @@
  
  
  if __name__ == "__main__":
--    BoolClient().main(sys.argv, "client.cfg")
-+    BoolClient().main(sys.argv, "/etc/duo/client.cfg")
---- a/dummy/duo-dummy-bool
-+++ b/dummy/duo-dummy-bool
+-    BoolClient().main(sys.argv, "../servers/icestorm-client.cfg")
++    BoolClient().main(sys.argv, "/etc/duo/icestorm-client.cfg")
+--- a/dummies/duo-dummy-bool
++++ b/dummies/duo-dummy-bool
 @@ -3,8 +3,7 @@
  
  import sys
@@ -64,21 +64,21 @@
      def create_content(self):
 -        self.wg_bool_on_image.set_from_file('pixmaps/bulb-true.png')
 -        self.wg_bool_off_image.set_from_file('pixmaps/bulb-false.png')
-+        self.wg_bool_on_image.set_from_file('/usr/share/duo/dummy/pixmaps/bulb-true.png')
-+        self.wg_bool_off_image.set_from_file('/usr/share/duo/dummy/pixmaps/bulb-false.png')
++        self.wg_bool_on_image.set_from_file('/usr/share/duo/dummies/pixmaps/bulb-true.png')
++        self.wg_bool_off_image.set_from_file('/usr/share/duo/dummies/pixmaps/bulb-false.png')
  
          self.wg_bool_button.connect('toggled', self.on_bool_toogle)
  
-@@ -62,4 +61,4 @@
+@@ -61,4 +60,4 @@
  
  if __name__ == "__main__":
      dummy = DummyBool()
--    sys.exit(dummy.main(sys.argv, "dummy.cfg"))
-+    sys.exit(dummy.main(sys.argv, "/etc/duo/dummy.cfg"))
---- a/dummy/istaf.cfg
-+++ b/dummy/istaf.cfg
+-    sys.exit(dummy.main(sys.argv, "../servers/istaf-client.cfg"))
++    sys.exit(dummy.main(sys.argv, "/etc/duo/isfaf-client.cfg"))
+--- a/servers/istaf.cfg
++++ b/servers/istaf.cfg
 @@ -1,7 +1,7 @@
- # -*- mode: conf; coding: utf-8 -*-
+ # -*- mode:conf; coding:utf-8 -*-
  
  # Local ISTAF service, pyicebox config
 -IceBox.Service.ISTopicAsFacet = istaf.Service --Ice.Config=istaf.cfg
@@ -112,10 +112,10 @@
  
  
  if __name__ == "__main__":
--    ByteClient().main(sys.argv, "client.cfg")
-+    ByteClient().main(sys.argv, "/etc/duo/client.cfg")
---- a/dummy/dummy_gui.py
-+++ b/dummy/dummy_gui.py
+-    ByteClient().main(sys.argv, "../servers/icestorm-client.cfg")
++    ByteClient().main(sys.argv, "/etc/duo/icestorm-client.cfg")
+--- a/dummies/dummy_gui.py
++++ b/dummies/dummy_gui.py
 @@ -67,7 +67,7 @@
  
  class GUI(GladeWrapper):
@@ -125,8 +125,8 @@
          self._model = model
          self._model.register(self)
  
---- a/dummy/duo-dummy-byte
-+++ b/dummy/duo-dummy-byte
+--- a/dummies/duo-dummy-byte
++++ b/dummies/duo-dummy-byte
 @@ -3,8 +3,7 @@
  
  import sys
@@ -141,27 +141,34 @@
  
  if __name__ == "__main__":
      dummy = DummyByte()
--    sys.exit(dummy.main(sys.argv, "dummy.cfg"))
-+    sys.exit(dummy.main(sys.argv, "/etc/duo/dummy.cfg"))
---- a/dummy/duo-launch-icestorm
-+++ b/dummy/duo-launch-icestorm
+-    sys.exit(dummy.main(sys.argv, "../servers/istaf-client.cfg"))
++    sys.exit(dummy.main(sys.argv, "/etc/duo/istaf-client.cfg"))
+--- a/servers/duo-icestorm
++++ b/servers/duo-icestorm
 @@ -5,5 +5,5 @@
  
  rm -fr "$DB_DIR"
  mkdir -p  "$DB_DIR"
--grep IceStorm.TopicManager.Proxy client.cfg
+-grep IceStorm.TopicManager.Proxy icestorm-client.cfg
 -icebox --Ice.Config=icestorm.cfg
-+grep IceStorm.TopicManager.Proxy /etc/duo/client.cfg
++grep IceStorm.TopicManager.Proxy /etc/duo/icestorm-client.cfg
 +icebox --Ice.Config=/etc/duo/icestorm.cfg
---- a/dummy/duo-launch-istaf
-+++ b/dummy/duo-launch-istaf
-@@ -9,7 +9,7 @@
+--- a/servers/duo-istaf
++++ b/servers/duo-istaf
+@@ -3,13 +3,13 @@
+ 
+ DB_DIR=/tmp/istaf-db
+ 
+-./duo-icestorm &
++duo-icestorm &
+ sleep .5
+ IS_PID=$(pidof icebox | awk '{print $NF}')
  
  rm -fr "$DB_DIR"
  mkdir -p  "$DB_DIR"
--grep IceStorm.TopicManager.Proxy dummy.cfg
+-grep ISTopicAsFacet.TopicManager.Proxy istaf-client.cfg
 -pyicebox --Ice.Config=istaf.cfg
-+grep IceStorm.TopicManager.Proxy /etc/duo/dummy.cfg
++grep ISTopicAsFacet.Proxy /etc/duo/istaf-client.cfg
 +pyicebox --Ice.Config=/etc/duo/istaf.cfg
  
  kill $IS_PID
