@@ -37,4 +37,4 @@ class ByteClient(ClientBase):
 
 
 if __name__ == "__main__":
-    ByteClient().main(sys.argv, "client.cfg")
+    ByteClient().main(sys.argv, "../servers/icestorm-client.cfg")

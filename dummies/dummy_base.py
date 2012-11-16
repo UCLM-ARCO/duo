@@ -22,7 +22,7 @@ loadSlice('dummy.ice')
 loadSlice('../slice/DUO.ice')
 
 import DUO
-import Actor
+import DummyDUO
 
 
 def closeOnSystemExit(mth):
@@ -142,7 +142,7 @@ class MetaDummy(type):
         if len(name.split('.')[1]) == 1:
             module = "DUO"
         else:
-            module = "Actor"
+            module = "DummyDUO"
 
         base = None
         try:
@@ -234,7 +234,7 @@ class Dummy(Ice.Application):
 
     def get_topic_manager(self):
         ic = self.communicator()
-        topic_mgr = ic.propertyToProxy("IceStorm.TopicManager.Proxy")
+        topic_mgr = ic.propertyToProxy("ISTopicAsFacet.TopicManager.Proxy")
         topic_mgr = IceStorm.TopicManagerPrx.checkedCast(topic_mgr)
         return topic_mgr
 

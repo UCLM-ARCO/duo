@@ -1,0 +1,9 @@
+#!/bin/sh
+# -*- mode:sh; coding:utf-8 -*-
+
+DB_DIR=/tmp/icestorm-db
+
+rm -fr "$DB_DIR"
+mkdir -p  "$DB_DIR"
+grep IceStorm.TopicManager.Proxy icestorm-client.cfg
+icebox --Ice.Config=icestorm.cfg

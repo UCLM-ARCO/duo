@@ -7,7 +7,7 @@ install:
 	$(MAKE) -C slice install
 	$(MAKE) -C dummies install
 	$(MAKE) -C clients install
+	$(MAKE) -C servers install
 
 clean:
 	$(MAKE) -C slice clean
-

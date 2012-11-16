@@ -5,9 +5,9 @@ import signal
 
 istaf_port = 11000
 istaf = TestBG(
-    cwd = '$basedir/dummies/',
+    cwd = '$basedir/servers/',
     pre = Not(OpenPort(istaf_port)),
-    cmd = './duo-launch-istaf',
+    cmd = './duo-istaf',
     signal = signal.SIGINT,
     expected = -2)
 
@@ -35,8 +35,3 @@ client = Test(
     pre = Poll(OpenPort(active_port)),
     cwd = '$basedir/clients',
     cmd = "./duo-client-byte '{0}' --set 45".format(active_proxy))
-
-
-
-
-

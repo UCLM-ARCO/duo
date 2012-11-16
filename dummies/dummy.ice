@@ -4,7 +4,7 @@
 // #include "DUO/ASDF.ice"
 // #include "DUO/Services.ice"
 
-module Actor {
+module DummyDUO {
 
 //   module Pulse {
 //     interface WA extends DUO::Pulse::W, DUO::Active::R {};
@@ -69,4 +69,3 @@ module Actor {
 //   };
 
 };
-

@@ -15,7 +15,3 @@ client = Test(
     pre = Poll(OpenPort(port), .05),
     cwd = '$basedir/clients',
     cmd = "./duo-client-bool '{0}' --set True".format(proxy))
-
-
-
-

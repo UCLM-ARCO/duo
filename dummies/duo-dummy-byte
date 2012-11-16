@@ -47,4 +47,4 @@ class DummyByte(Dummy):
 
 if __name__ == "__main__":
     dummy = DummyByte()
-    sys.exit(dummy.main(sys.argv, "dummy.cfg"))
+    sys.exit(dummy.main(sys.argv, "../servers/istaf-client.cfg"))
