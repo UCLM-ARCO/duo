@@ -69,7 +69,7 @@ class GUI(GladeWrapper):
     def __init__(self, model):
         GladeWrapper.__init__(self, "dummy.glade")
         self._model = model
-        self._model.register(self)
+        self._model.attach(self)
 
         self._setup_gui()
         self._add_dummy_bands()

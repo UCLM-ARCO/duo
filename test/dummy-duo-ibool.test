@@ -8,7 +8,7 @@ dummy = TestBG(
     signal = signal.SIGINT,
     cmd = './duo-dummy-bool --host localhost --port {port} --id test --no-gui W'.
     format(**locals()),
-    post = StdErrContains('received set(True'))
+    post = StdErrContains('-> set(True'))
 
 proxy = "test -t:tcp -p {port}".format(**locals())
 client = Test(

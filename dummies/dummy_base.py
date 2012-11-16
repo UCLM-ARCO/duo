@@ -10,12 +10,12 @@ from gi.repository import GObject
 
 logging.basicConfig(level=logging.DEBUG,
                     format='DUMMY|%(levelname)s: %(message)s',
-                    datefmt='%Y-%m-%d %H:%M:%S',)
+                    datefmt='%Y-%m-%d %H:%M:%S')
 
 
 def loadSlice(name):
-    string = '-I{0} -I. -I../slice --all {1}'
-    Ice.loadSlice(string.format(Ice.getSliceDir(), name))
+    args = '-I{0} -I. -I../slice --all {1}'
+    Ice.loadSlice(args.format(Ice.getSliceDir(), name))
 
 
 loadSlice('dummy.ice')
@@ -52,25 +52,25 @@ class Subject(object):
     def get_state(self):
         return self.state
 
-    def register(self, ob):
-        logging.debug("register of '{0}'".format(ob))
+    def attach(self, ob):
+        logging.info("attach: '{0}'".format(ob))
         self.observers.append(ob)
 
-    def unregister(self, ob):
+    def detach(self, ob):
         if ob in self.observers:
-            logging.debug("unregister of '{0}'".format(ob))
+            logging.info("detach: '{0}'".format(ob))
             self.observers.remove(ob)
 
     def notify(self):
         def idle_call():
             for ob in self.observers:
                 try:
-                    logging.debug("notify on '{0}'".format(ob))
+                    logging.info("updating '{0}'".format(ob))
                     ob.update()
                 except Exception, e:
                     logging.error("unexpected behaviour: {0}".format(e))
                     logging.error("removing observer '{0}'".format(ob))
-                    self.unregister(ob)
+                    self.detach(ob)
 
         GObject.idle_add(idle_call)
 
@@ -87,14 +87,14 @@ class Active_I(Subject):
         self.reactive = Reactive(self, self.publisher)
 
     def ice_ping(self, current=None):
-        logging.info("received a ping()")
+        logging.info("-> ping()")
         self.notify()
 
 
 class Dummy_R(Subject):
     def get(self, current=None):
         state = self.get_state()
-        logging.info(" -- received get(), return: {0}".format(state))
+        logging.info(" -> get(), return: {0}".format(state))
         return state
 
 
@@ -102,7 +102,7 @@ class Dummy_W(Subject):
     def set(self, val, oid, current):
         ic = current.adapter.getCommunicator()
         oid = ic.identityToString(oid)
-        logging.info(" -- received set({0}, '{1}')".format(val, oid))
+        logging.info("-> set({0}, '{1}')".format(val, oid))
 
         self.set_state(val)
 
@@ -111,15 +111,15 @@ class Reactive(object):
     def __init__(self, model, publisher):
         self.model = model
         self.publisher = publisher
-        self.model.register(self)
+        self.model.attach(self)
 
     def update(self):
         state = self.model.get_state()
         self.publisher.set(state, Ice.Identity())
-        logging.info(' -- observer.set({0})'.format(state))
+        logging.info('<- observer.set({0})'.format(state))
 
     def __repr__(self):
-        return "Reactive({0})".format(self.model)
+        return "Reactive({0})".format(self.model.ice_id())
 
 
 class DUOCaster(object):
@@ -330,5 +330,5 @@ class Dummy(Ice.Application):
     def get_state(self):
         return self.servant.get_state()
 
-    def register(self, observer):
-        self.servant.register(observer)
+    def attach(self, observer):
+        self.servant.attach(observer)

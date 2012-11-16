@@ -19,7 +19,7 @@ active = TestBG(
     signal = signal.SIGINT,
     cmd = './duo-dummy-bool --host localhost --port {0} --id test --no-gui RWA'.
     format(active_port),
-    post = StdErrContains('received set(True'))
+    post = StdErrContains('-> set(True'))
 
 observer_port = 1235
 observer = TestBG(
@@ -28,7 +28,7 @@ observer = TestBG(
     signal = signal.SIGINT,
     cmd = "./duo-dummy-bool --active-suscribe '{}' --host localhost --port {} --id test --no-gui W".
     format(active_proxy, observer_port),
-    post = StdErrContains('received set(True'))
+    post = StdErrContains('-> set(True'))
 
 client = Test(
     pre = Poll(OpenPort(active_port)),

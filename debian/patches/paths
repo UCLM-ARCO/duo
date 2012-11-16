@@ -15,16 +15,16 @@
  
  
  def loadSlice(name):
--    string = '-I{0} -I. -I../slice --all {1}'
--    Ice.loadSlice(string.format(Ice.getSliceDir(), name))
+-    args = '-I{0} -I. -I../slice --all {1}'
+-    Ice.loadSlice(args.format(Ice.getSliceDir(), name))
 +    prefix = "/usr/share/duo"
-+    string = '-I{0} -I{1}/dummies -I{1}/slice --all {2}'
-+    Ice.loadSlice(string.format(Ice.getSliceDir(), prefix, name))
++    args = '-I{0} -I{1}/dummies -I{1}/slice --all {2}'
++    Ice.loadSlice(string.format(Ice.getSliceDir(), args, name))
  
  
 -loadSlice('dummy.ice')
 -loadSlice('../slice/DUO.ice')
-+loadSlice('/usr/share/duo/dummy/dummy.ice')
++loadSlice('/usr/share/duo/dummies/dummy.ice')
 +loadSlice('/usr/share/duo/slice/DUO.ice')
  
  import DUO
@@ -54,7 +54,7 @@
  
 -from dummy_base import Dummy, MetaDummy
 -from dummy_gui import GUI
-+from duo.dummy import Dummy, MetaDummy, GUI
++from duo.dummies import Dummy, MetaDummy, GUI
  
  
  class BoolGUI(GUI):
@@ -69,7 +69,7 @@
  
          self.wg_bool_button.connect('toggled', self.on_bool_toogle)
  
-@@ -61,4 +60,4 @@
+@@ -62,4 +61,4 @@
  
  if __name__ == "__main__":
      dummy = DummyBool()
@@ -121,9 +121,9 @@
  class GUI(GladeWrapper):
      def __init__(self, model):
 -        GladeWrapper.__init__(self, "dummy.glade")
-+        GladeWrapper.__init__(self, "/usr/share/duo/dummy/dummy.glade")
++        GladeWrapper.__init__(self, "/usr/share/duo/dummies/dummy.glade")
          self._model = model
-         self._model.register(self)
+         self._model.attach(self)
  
 --- a/dummies/duo-dummy-byte
 +++ b/dummies/duo-dummy-byte
@@ -133,7 +133,7 @@
  
 -from dummy_base import Dummy, MetaDummy
 -from dummy_gui import GUI
-+from duo.dummy import Dummy, MetaDummy, GUI
++from duo.dummies import Dummy, MetaDummy, GUI
  
  
  class ByteGUI(GUI):
