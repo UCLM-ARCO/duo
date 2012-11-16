@@ -240,7 +240,12 @@ class Dummy(Ice.Application):
 
     def setup_servant_as_observer(self):
         topic = self._get_topic_to_suscribe()
-        topic.subscribeAndGetPublisher({}, self.proxy)
+        try:
+            topic.subscribeAndGetPublisher({}, self.proxy)
+        except IceStorm.AlreadySubscribed:
+            pass
+
+        logging.info("suscribed to '{0}'".format(topic))
 
     def _get_topic_to_suscribe(self):
         ic = self.communicator()

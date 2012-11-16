@@ -15,7 +15,7 @@ active_proxy = "test -t:tcp -p {0}".format(active_port)
 active = TestBG(
     pre = [Not(OpenPort(active_port)),
            Poll(OpenPort(istaf_port))],
-    cwd = '$basedir/dummies/',
+    cwd = '$basedir/dummies',
     signal = signal.SIGINT,
     cmd = './duo-dummy-bool --host localhost --port {0} --id test --no-gui RWA'.
     format(active_port),
@@ -23,14 +23,15 @@ active = TestBG(
 
 observer_port = 1235
 observer = TestBG(
-    pre = Not(OpenPort(observer_port)),
+    pre = [Not(OpenPort(observer_port)),
+           Poll(OpenPort(active_port))],
     cwd = '$basedir/dummies/',
     signal = signal.SIGINT,
-    cmd = "./duo-dummy-bool --active-suscribe '{}' --host localhost --port {} --id test --no-gui W".
-    format(active_proxy, observer_port),
-    post = StdErrContains('-> set(True'))
+    save_stderr = True,
+    cmd = "./duo-dummy-bool --active-suscribe '{}' --host localhost --port {} --id test --no-gui W".format(active_proxy, observer_port))
 
 client = Test(
-    pre = Poll(OpenPort(active_port)),
+    pre = [Poll(OpenPort(active_port)), Poll(OpenPort(observer_port))],
     cwd = '$basedir/clients',
-    cmd = "./duo-client-bool '{0}' --set True".format(active_proxy))
+    cmd = "./duo-client-bool '{0}' --set True".format(active_proxy),
+    post = Poll(FileContains('-> set(True', observer.stderr)))

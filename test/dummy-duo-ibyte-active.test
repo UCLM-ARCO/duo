@@ -2,10 +2,9 @@
 
 import signal
 
-
 istaf_port = 11000
 istaf = TestBG(
-    cwd = '$basedir/servers/',
+    cwd = '$basedir/servers',
     pre = Not(OpenPort(istaf_port)),
     cmd = './duo-istaf',
     signal = signal.SIGINT,
@@ -24,14 +23,15 @@ active = TestBG(
 
 observer_port = 1235
 observer = TestBG(
-    pre = Not(OpenPort(observer_port)),
-    cwd = '$basedir/dummies',
+    pre = [Not(OpenPort(observer_port)),
+           Poll(OpenPort(active_port))],
+    cwd = '$basedir/dummies/',
     signal = signal.SIGINT,
-    cmd = "./duo-dummy-byte --active-suscribe '{}' --host localhost --port {} --id test --no-gui W".
-    format(active_proxy, observer_port),
-    post = StdErrContains('-> set(45'))
+	save_stderr = True,
+    cmd = "./duo-dummy-byte --active-suscribe '{}' --host localhost --port {} --id test --no-gui W".format(active_proxy, observer_port))
 
 client = Test(
-    pre = Poll(OpenPort(active_port)),
+    pre = [Poll(OpenPort(active_port)), Poll(OpenPort(observer_port))],
     cwd = '$basedir/clients',
-    cmd = "./duo-client-byte '{0}' --set 45".format(active_proxy))
+    cmd = "./duo-client-byte '{0}' --set 45".format(active_proxy),
+    post = Poll(FileContains('-> set(45', observer.stderr)))
