@@ -63,6 +63,33 @@ module DUO {
     };
 
   };
+
+  dictionary<string, Object*> ObjectPrxDict;
+
+  module Container {
+    exception AlreadyExistsException { string key; };
+    exception NoSuchKeyException { string key; };
+
+    interface RW;
+    interface R { ["freeze:read", "ami"] idempotent ObjectPrxDict list(); };
+    interface W {
+      // Add and remove external items
+      ["freeze:write", "ami"]
+	void link(string key, Object* value) throws AlreadyExistsException;
+
+      ["freeze:write", "ami"]
+	void unlink(string key) throws NoSuchKeyException;
+
+      // Create new colocated Container children
+      ["freeze:write", "ami"]
+	Container::RW* create(string key) throws AlreadyExistsException;
+
+      // Destroy *this* object
+      ["freeze:write", "ami"]
+	void destroy();
+    };
+    interface RW extends R,W {};
+  };
 };
 
 #endif

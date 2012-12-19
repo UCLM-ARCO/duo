@@ -1,9 +1,8 @@
 # -*- mode: python; coding: utf-8 -*-
 
-from gi.repository import Gtk, GObject
 import logging
 
-
+from gi.repository import Gtk, GObject
 GObject.threads_init()
 
 
