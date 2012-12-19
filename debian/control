@@ -2,7 +2,7 @@ Source: duo
 Section: devel
 Priority: extra
 Maintainer: ARCO Research Group <sysadm@arco.esi.uclm.es>
-Uploaders: Oscar Aceña Herrera <oscaracena@gmail.com>, David Villa Alises <David.Villa@gmail.com>
+Uploaders: Oscar Aceña Herrera <oscaracena@gmail.com>, David Villa Alises <David.Villa@gmail.com>, Raquel Burgos Plaza <rburgosplaza@gmail.com>
 Build-Depends: debhelper (>= 7.0.50~), python, arco-devel, quilt
 Standards-Version: 3.9.3
 Homepage: http://arco.esi.uclm.es

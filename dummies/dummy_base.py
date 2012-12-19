@@ -83,7 +83,7 @@ class Active_I(Subject):
         return self.publisher
 
     def setObserver(self, publisher, current=None):
-        self.publisher = publisher
+        self.publisher = self.cast_proxy(publisher)
         self.reactive = Reactive(self, self.publisher)
 
     def ice_ping(self, current=None):
@@ -217,7 +217,7 @@ class Dummy(Ice.Application):
     def setup_servant_as_active(self):
         topic = self.get_servant_topic()
         publisher = topic.getPublisher()
-        publisher = self.servant.cast_proxy(publisher)
+#        publisher = self.servant.cast_proxy(publisher)
         self.servant.setObserver(publisher)
 
     def get_servant_topic(self):
