@@ -2,6 +2,7 @@
 
 import logging
 import argparse
+import sys
 
 import Ice
 import IceStorm
@@ -25,13 +26,15 @@ import DUO
 import DummyDUO
 
 
-def closeOnSystemExit(mth):
+# FIXME: rename ShutdownOnSystemExit
+def closeOnSystemExit(method):
     def _deco(self, *args, **kwargs):
         try:
-            return mth(self, *args, **kwargs)
+            return method(self, *args, **kwargs)
         except SystemExit:
             self.communicator().shutdown()
-    _deco.__name__ = mth.__name__
+
+    _deco.__name__ = method.__name__
     return _deco
 
 
@@ -156,19 +159,19 @@ class MetaDummy(type):
 
 
 class Dummy(Ice.Application):
-
-    @closeOnSystemExit
     def run(self, args):
         self.build_parser()
         self.add_options()
 
-        self.args = self.arg_parser.parse_args(args[1:])
         try:
+            self.args = self.arg_parser.parse_args(args[1:])
             self.process_args()
-        except DummyException, e:
+        except DummyException as e:
             logging.error("ERROR: {0}".format(e.message))
+            return 2
+        except SystemExit as e:
             self.communicator().shutdown()
-            return -1
+            return e.code
 
         self.wait()
 
