@@ -2,7 +2,9 @@
 
 from signal import SIGINT
 from hamcrest import is_not, contains_string
-from prego import TestCase, Task, listen_port, localhost, context
+
+from prego import TestCase, Task, context
+from prego.net import listen_port, localhost
 
 
 class BoolTests(TestCase):
