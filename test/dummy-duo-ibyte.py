@@ -34,7 +34,7 @@ class BoolTests(TestCase):
 
         istaf = Task(desc='ISTAF', detach=True)
         istaf.assert_that(localhost, is_not(listen_port(context.istaf_port)))
-        istaf.command('duo-istaf',
+        istaf.command('./duo-istaf', cwd='$basedir/servers',
                       timeout=None, signal=SIGINT, expected=-SIGINT)
 
         active = Task(desc='active actor', detach=True)

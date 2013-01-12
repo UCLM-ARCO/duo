@@ -1,8 +1,6 @@
-#!/usr/bin/python
 # -*- coding:utf-8; tab-width:4; mode:python -*-
 
 from signal import SIGINT
-
 from hamcrest import is_not, contains_string
 
 from prego import TestCase, Task, context
@@ -36,7 +34,7 @@ class BoolTests(TestCase):
 
         istaf = Task(desc='ISTAF', detach=True)
         istaf.assert_that(localhost, is_not(listen_port(context.istaf_port)))
-        istaf.command('duo-istaf',
+        istaf.command('./duo-istaf', cwd='$basedir/servers',
                       timeout=None, signal=SIGINT, expected=-SIGINT)
 
         active = Task(desc='active actor', detach=True)
@@ -44,11 +42,11 @@ class BoolTests(TestCase):
         active.wait_that(localhost, listen_port(context.istaf_port))
 
         active_options = '--host localhost --port $active_port --id test --no-gui RWA'
-        active_cmd = active.command('./duo-dummy-bool ' + active_options,
+        active.command('./duo-dummy-bool ' + active_options,
                                     cwd='$basedir/dummies',
                                     timeout=None, signal=SIGINT)
 
-        active.assert_that(active_cmd.stderr.content,
+        active.assert_that(active.lastcmd.stderr.content,
                            contains_string('-> set(True'))
 
         observer = Task(desc='observer', detach=True)
