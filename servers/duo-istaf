@@ -4,7 +4,7 @@
 DB_DIR=/tmp/istaf-db
 
 ./duo-icestorm &
-sleep .5
+while ! fuser -n tcp 10000; do sleep 0.5; done
 IS_PID=$(pidof icebox | awk '{print $NF}')
 
 rm -fr "$DB_DIR"
