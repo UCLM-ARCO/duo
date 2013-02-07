@@ -8,7 +8,7 @@ Standards-Version: 3.9.3
 Homepage: http://arco.esi.uclm.es
 
 Package: duo
-Architecture: i386
+Architecture: any
 Depends: ${misc:Depends}, ${python:Depends}, istaf
 Replaces: hesperia-slice, duo-slice
 Description: Arco DUO interfaces: slices, dummies, clients, tools, etc.
