@@ -4,6 +4,12 @@ duo (0.20130312-1) unstable; urgency=low
 
  -- David Villa Alises <David.Villa@gmail.com>  Tue, 12 Mar 2013 16:17:35 +0100
 
+duo (0.20130207-1) unstable; urgency=low
+
+  * debian/control: architecture: any
+
+ -- David Villa Alises <David.Villa@gmail.com>  Thu, 07 Feb 2013 13:29:57 +0100
+
 duo (0.20121219-1) unstable; urgency=low
 
   * New release
