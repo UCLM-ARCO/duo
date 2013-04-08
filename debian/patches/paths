@@ -1,7 +1,5 @@
-Index: duo/servers/icestorm.cfg
-===================================================================
---- duo.orig/servers/icestorm.cfg	2013-01-08 13:01:31.000000000 +0100
-+++ duo/servers/icestorm.cfg	2013-02-06 14:50:28.000000000 +0100
+--- a/servers/icestorm.cfg
++++ b/servers/icestorm.cfg
 @@ -1,7 +1,7 @@
  # -*- mode: conf; coding: utf-8 -*-
  
@@ -11,32 +9,28 @@ Index: duo/servers/icestorm.cfg
  IceBox.ServiceManager.Endpoints = tcp -h 127.0.0.1 -p 20000
  IceBox.PrintServicesReady = IceStorm Service
  
-Index: duo/dummies/dummy_base.py
-===================================================================
---- duo.orig/dummies/dummy_base.py	2013-01-08 13:01:31.000000000 +0100
-+++ duo/dummies/dummy_base.py	2013-02-06 14:50:28.000000000 +0100
+--- a/dummies/dummy_base.py
++++ b/dummies/dummy_base.py
 @@ -15,12 +15,13 @@
  
  
  def loadSlice(name):
 -    args = '-I{0} -I. -I../slice --all {1}'
 -    Ice.loadSlice(args.format(Ice.getSliceDir(), name))
-+    prefix = "/usr/share/duo"
-+    args = '-I{0} -I{1}/dummy -I{1}/slice --all {2}'
++    prefix = "/usr/share/slice/duo"
++    args = '-I{0} -I{1}/dummy -I{1} --all {2}'
 +    Ice.loadSlice(args.format(Ice.getSliceDir(), prefix, name))
  
  
 -loadSlice('dummy.ice')
 -loadSlice('../slice/DUO.ice')
-+loadSlice('/usr/share/duo/dummy/dummy.ice')
-+loadSlice('/usr/share/duo/slice/DUO.ice')
++loadSlice('/usr/share/slice/duo/dummy/dummy.ice')
++loadSlice('/usr/share/slice/duo/DUO.ice')
  
  import DUO
  import DummyDUO
-Index: duo/clients/duo-client-bool
-===================================================================
---- duo.orig/clients/duo-client-bool	2013-01-08 13:01:31.000000000 +0100
-+++ duo/clients/duo-client-bool	2013-02-06 14:50:28.000000000 +0100
+--- a/clients/duo-client-bool
++++ b/clients/duo-client-bool
 @@ -5,7 +5,7 @@
  import logging
  import Ice
@@ -52,10 +46,8 @@ Index: duo/clients/duo-client-bool
  if __name__ == "__main__":
 -    BoolClient().main(sys.argv, "../servers/icestorm-client.cfg")
 +    BoolClient().main(sys.argv, "/etc/duo/icestorm-client.cfg")
-Index: duo/dummies/duo-dummy-bool
-===================================================================
---- duo.orig/dummies/duo-dummy-bool	2013-01-08 13:01:31.000000000 +0100
-+++ duo/dummies/duo-dummy-bool	2013-02-06 14:50:28.000000000 +0100
+--- a/dummies/duo-dummy-bool
++++ b/dummies/duo-dummy-bool
 @@ -3,8 +3,7 @@
  
  import sys
@@ -83,10 +75,8 @@ Index: duo/dummies/duo-dummy-bool
      dummy = DummyBool()
 -    sys.exit(dummy.main(sys.argv, "../servers/istaf-client.cfg"))
 +    sys.exit(dummy.main(sys.argv, "/etc/duo/istaf-client.cfg"))
-Index: duo/servers/istaf.cfg
-===================================================================
---- duo.orig/servers/istaf.cfg	2013-01-08 13:01:31.000000000 +0100
-+++ duo/servers/istaf.cfg	2013-02-06 14:50:28.000000000 +0100
+--- a/servers/istaf.cfg
++++ b/servers/istaf.cfg
 @@ -1,7 +1,7 @@
  # -*- mode:conf; coding:utf-8 -*-
  
@@ -96,23 +86,19 @@ Index: duo/servers/istaf.cfg
  IceBox.ServiceManager.Endpoints = tcp -p 21000
  IceBox.PrintServicesReady = ISTAF Service
  
-Index: duo/clients/client_base.py
-===================================================================
---- duo.orig/clients/client_base.py	2013-01-08 13:01:31.000000000 +0100
-+++ duo/clients/client_base.py	2013-02-06 14:50:28.000000000 +0100
+--- a/clients/client_base.py
++++ b/clients/client_base.py
 @@ -8,7 +8,7 @@
  logging.getLogger().setLevel(logging.DEBUG)
  
  slice_path = Ice.getSliceDir()
 -Ice.loadSlice("-I{0} -I.. --all ../slice/DUO.ice".format(slice_path))
-+Ice.loadSlice("-I{0} -I{1} --all {1}/DUO.ice".format(slice_path, '/usr/share/duo/slice'))
++Ice.loadSlice("-I{0} -I{1} --all {1}/DUO.ice".format(slice_path, '/usr/share/slice/duo'))
  
  
  def closeOnSystemExit(mth):
-Index: duo/clients/duo-client-byte
-===================================================================
---- duo.orig/clients/duo-client-byte	2013-01-08 13:01:31.000000000 +0100
-+++ duo/clients/duo-client-byte	2013-02-06 14:50:28.000000000 +0100
+--- a/clients/duo-client-byte
++++ b/clients/duo-client-byte
 @@ -5,7 +5,7 @@
  import logging
  import Ice
@@ -128,10 +114,8 @@ Index: duo/clients/duo-client-byte
  if __name__ == "__main__":
 -    ByteClient().main(sys.argv, "../servers/icestorm-client.cfg")
 +    ByteClient().main(sys.argv, "/etc/duo/icestorm-client.cfg")
-Index: duo/dummies/dummy_gui.py
-===================================================================
---- duo.orig/dummies/dummy_gui.py	2013-01-08 13:01:31.000000000 +0100
-+++ duo/dummies/dummy_gui.py	2013-02-06 14:50:28.000000000 +0100
+--- a/dummies/dummy_gui.py
++++ b/dummies/dummy_gui.py
 @@ -66,7 +66,7 @@
  
  class GUI(GladeWrapper):
@@ -141,10 +125,8 @@ Index: duo/dummies/dummy_gui.py
          self._model = model
          self._model.attach(self)
  
-Index: duo/dummies/duo-dummy-byte
-===================================================================
---- duo.orig/dummies/duo-dummy-byte	2013-01-08 13:01:31.000000000 +0100
-+++ duo/dummies/duo-dummy-byte	2013-02-06 14:50:28.000000000 +0100
+--- a/dummies/duo-dummy-byte
++++ b/dummies/duo-dummy-byte
 @@ -3,8 +3,7 @@
  
  import sys
@@ -161,10 +143,8 @@ Index: duo/dummies/duo-dummy-byte
      dummy = DummyByte()
 -    sys.exit(dummy.main(sys.argv, "../servers/istaf-client.cfg"))
 +    sys.exit(dummy.main(sys.argv, "/etc/duo/istaf-client.cfg"))
-Index: duo/servers/duo-icestorm
-===================================================================
---- duo.orig/servers/duo-icestorm	2013-01-08 13:01:31.000000000 +0100
-+++ duo/servers/duo-icestorm	2013-02-06 14:50:28.000000000 +0100
+--- a/servers/duo-icestorm
++++ b/servers/duo-icestorm
 @@ -5,5 +5,5 @@
  
  rm -fr "$DB_DIR"
@@ -173,10 +153,8 @@ Index: duo/servers/duo-icestorm
 -icebox --Ice.Config=icestorm.cfg
 +grep --color IceStorm.TopicManager.Proxy /etc/duo/icestorm-client.cfg
 +icebox --Ice.Config=/etc/duo/icestorm.cfg
-Index: duo/servers/duo-istaf
-===================================================================
---- duo.orig/servers/duo-istaf	2013-02-06 14:50:07.000000000 +0100
-+++ duo/servers/duo-istaf	2013-02-06 14:52:26.000000000 +0100
+--- a/servers/duo-istaf
++++ b/servers/duo-istaf
 @@ -3,13 +3,13 @@
  
  DB_DIR=/tmp/istaf-db
