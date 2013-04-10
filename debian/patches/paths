@@ -11,7 +11,7 @@
  
 --- a/dummies/dummy_base.py
 +++ b/dummies/dummy_base.py
-@@ -15,12 +15,13 @@
+@@ -15,12 +15,13 @@ logging.basicConfig(level=logging.DEBUG,
  
  
  def loadSlice(name):
@@ -31,7 +31,7 @@
  import DummyDUO
 --- a/clients/duo-client-bool
 +++ b/clients/duo-client-bool
-@@ -5,7 +5,7 @@
+@@ -5,7 +5,7 @@ import sys
  import logging
  import Ice
  
@@ -40,7 +40,7 @@
  import DUO
  
  
-@@ -35,4 +35,4 @@
+@@ -35,4 +35,4 @@ class BoolClient(ClientBase):
  
  
  if __name__ == "__main__":
@@ -58,8 +58,8 @@
  
  
  class BoolGUI(GUI):
-@@ -13,8 +12,8 @@
-         self.wg_window.set_title("Dummy Bool")
+@@ -14,8 +13,8 @@ class BoolGUI(GUI):
+         self.wg_bool_button.set_active(state)
  
      def create_content(self):
 -        self.wg_bool_on_image.set_from_file('pixmaps/bulb-true.png')
@@ -69,7 +69,7 @@
  
          self.wg_bool_button.connect('toggled', self.on_bool_toogle)
  
-@@ -61,4 +60,4 @@
+@@ -62,4 +61,4 @@ class DummyBool(Dummy):
  
  if __name__ == "__main__":
      dummy = DummyBool()
@@ -88,7 +88,7 @@
  
 --- a/clients/client_base.py
 +++ b/clients/client_base.py
-@@ -8,7 +8,7 @@
+@@ -8,7 +8,7 @@ import Ice
  logging.getLogger().setLevel(logging.DEBUG)
  
  slice_path = Ice.getSliceDir()
@@ -99,7 +99,7 @@
  def closeOnSystemExit(mth):
 --- a/clients/duo-client-byte
 +++ b/clients/duo-client-byte
-@@ -5,7 +5,7 @@
+@@ -5,7 +5,7 @@ import sys
  import logging
  import Ice
  
@@ -108,7 +108,7 @@
  import DUO
  
  
-@@ -37,4 +37,4 @@
+@@ -37,4 +37,4 @@ class ByteClient(ClientBase):
  
  
  if __name__ == "__main__":
@@ -116,7 +116,7 @@
 +    ByteClient().main(sys.argv, "/etc/duo/icestorm-client.cfg")
 --- a/dummies/dummy_gui.py
 +++ b/dummies/dummy_gui.py
-@@ -66,7 +66,7 @@
+@@ -66,7 +66,7 @@ class GladeWrapper(object):
  
  class GUI(GladeWrapper):
      def __init__(self, model):
@@ -137,7 +137,7 @@
  
  
  class ByteGUI(GUI):
-@@ -47,4 +46,4 @@
+@@ -47,4 +46,4 @@ class DummyByte(Dummy):
  
  if __name__ == "__main__":
      dummy = DummyByte()
@@ -145,7 +145,7 @@
 +    sys.exit(dummy.main(sys.argv, "/etc/duo/istaf-client.cfg"))
 --- a/servers/duo-icestorm
 +++ b/servers/duo-icestorm
-@@ -5,5 +5,5 @@
+@@ -5,5 +5,5 @@ DB_DIR=/tmp/icestorm-db
  
  rm -fr "$DB_DIR"
  mkdir -p  "$DB_DIR"
