@@ -8,9 +8,10 @@ from dummy_gui import GUI
 
 
 class BoolGUI(GUI):
-    def __init__(self, model):
+    def __init__(self, model, state):
         GUI.__init__(self, model)
         self.wg_window.set_title("Dummy Bool")
+        self.wg_bool_button.set_active(state)
 
     def create_content(self):
         self.wg_bool_on_image.set_from_file('pixmaps/bulb-true.png')
@@ -47,16 +48,16 @@ class DummyBool(Dummy):
             'interface', choices=('R', 'W', 'RW', 'RWA'), type=str,
             help='interface to implement')
         self.arg_parser.add_argument(
-            '--init', dest='state', type=bool, help="initial state",
-            default=False)
+            '--init', dest='state', type=str, help="initial state",
+            default="False")
 
     def do_create_servant(self):
         iface = "IBool.{0}".format(self.args.interface)
         dummyClass = MetaDummy(iface)
-        return dummyClass(self.args.state)
+        return dummyClass(self.args.state == "True")
 
     def do_create_gui(self):
-        return BoolGUI(self)
+        return BoolGUI(self, self.args.state == "True")
 
 
 if __name__ == "__main__":
