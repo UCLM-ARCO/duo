@@ -2,7 +2,6 @@
 
 import logging
 import argparse
-import sys
 
 import Ice
 import IceStorm
@@ -23,19 +22,9 @@ loadSlice('dummy.ice')
 loadSlice('../slice/DUO.ice')
 
 import DUO
+
+# Used on derived classes
 import DummyDUO
-
-
-# FIXME: rename ShutdownOnSystemExit
-def closeOnSystemExit(method):
-    def _deco(self, *args, **kwargs):
-        try:
-            return method(self, *args, **kwargs)
-        except SystemExit:
-            self.communicator().shutdown()
-
-    _deco.__name__ = method.__name__
-    return _deco
 
 
 class DummyException(Exception):
