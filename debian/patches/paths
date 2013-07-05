@@ -1,7 +1,7 @@
 Index: duo/servers/icestorm.cfg
 ===================================================================
---- duo.orig/servers/icestorm.cfg	2013-01-08 13:01:31.000000000 +0100
-+++ duo/servers/icestorm.cfg	2013-02-06 14:50:28.000000000 +0100
+--- duo.orig/servers/icestorm.cfg	2013-04-11 08:52:42.000000000 +0200
++++ duo/servers/icestorm.cfg	2013-04-15 09:52:17.000000000 +0200
 @@ -1,7 +1,7 @@
  # -*- mode: conf; coding: utf-8 -*-
  
@@ -13,30 +13,30 @@ Index: duo/servers/icestorm.cfg
  
 Index: duo/dummies/dummy_base.py
 ===================================================================
---- duo.orig/dummies/dummy_base.py	2013-01-08 13:01:31.000000000 +0100
-+++ duo/dummies/dummy_base.py	2013-02-06 14:50:28.000000000 +0100
-@@ -15,12 +15,13 @@
+--- duo.orig/dummies/dummy_base.py	2013-04-15 09:48:19.000000000 +0200
++++ duo/dummies/dummy_base.py	2013-04-15 09:52:17.000000000 +0200
+@@ -14,12 +14,13 @@
  
  
  def loadSlice(name):
 -    args = '-I{0} -I. -I../slice --all {1}'
 -    Ice.loadSlice(args.format(Ice.getSliceDir(), name))
-+    prefix = "/usr/share/duo"
-+    args = '-I{0} -I{1}/dummy -I{1}/slice --all {2}'
++    prefix = "/usr/share/slice/duo"
++    args = '-I{0} -I{1}/dummy -I{1} --all {2}'
 +    Ice.loadSlice(args.format(Ice.getSliceDir(), prefix, name))
  
  
 -loadSlice('dummy.ice')
 -loadSlice('../slice/DUO.ice')
-+loadSlice('/usr/share/duo/dummy/dummy.ice')
-+loadSlice('/usr/share/duo/slice/DUO.ice')
++loadSlice('/usr/share/slice/duo/dummy/dummy.ice')
++loadSlice('/usr/share/slice/duo/DUO.ice')
  
  import DUO
- import DummyDUO
+ 
 Index: duo/clients/duo-client-bool
 ===================================================================
---- duo.orig/clients/duo-client-bool	2013-01-08 13:01:31.000000000 +0100
-+++ duo/clients/duo-client-bool	2013-02-06 14:50:28.000000000 +0100
+--- duo.orig/clients/duo-client-bool	2013-04-11 08:52:42.000000000 +0200
++++ duo/clients/duo-client-bool	2013-04-15 09:52:17.000000000 +0200
 @@ -5,7 +5,7 @@
  import logging
  import Ice
@@ -54,8 +54,8 @@ Index: duo/clients/duo-client-bool
 +    BoolClient().main(sys.argv, "/etc/duo/icestorm-client.cfg")
 Index: duo/dummies/duo-dummy-bool
 ===================================================================
---- duo.orig/dummies/duo-dummy-bool	2013-01-08 13:01:31.000000000 +0100
-+++ duo/dummies/duo-dummy-bool	2013-02-06 14:50:28.000000000 +0100
+--- duo.orig/dummies/duo-dummy-bool	2013-04-15 09:45:31.000000000 +0200
++++ duo/dummies/duo-dummy-bool	2013-04-15 09:52:17.000000000 +0200
 @@ -3,8 +3,7 @@
  
  import sys
@@ -66,8 +66,8 @@ Index: duo/dummies/duo-dummy-bool
  
  
  class BoolGUI(GUI):
-@@ -13,8 +12,8 @@
-         self.wg_window.set_title("Dummy Bool")
+@@ -14,8 +13,8 @@
+         self.wg_bool_button.set_active(state)
  
      def create_content(self):
 -        self.wg_bool_on_image.set_from_file('pixmaps/bulb-true.png')
@@ -77,7 +77,7 @@ Index: duo/dummies/duo-dummy-bool
  
          self.wg_bool_button.connect('toggled', self.on_bool_toogle)
  
-@@ -61,4 +60,4 @@
+@@ -62,4 +61,4 @@
  
  if __name__ == "__main__":
      dummy = DummyBool()
@@ -85,8 +85,8 @@ Index: duo/dummies/duo-dummy-bool
 +    sys.exit(dummy.main(sys.argv, "/etc/duo/istaf-client.cfg"))
 Index: duo/servers/istaf.cfg
 ===================================================================
---- duo.orig/servers/istaf.cfg	2013-01-08 13:01:31.000000000 +0100
-+++ duo/servers/istaf.cfg	2013-02-06 14:50:28.000000000 +0100
+--- duo.orig/servers/istaf.cfg	2013-04-11 08:52:42.000000000 +0200
++++ duo/servers/istaf.cfg	2013-04-15 09:52:17.000000000 +0200
 @@ -1,7 +1,7 @@
  # -*- mode:conf; coding:utf-8 -*-
  
@@ -98,21 +98,21 @@ Index: duo/servers/istaf.cfg
  
 Index: duo/clients/client_base.py
 ===================================================================
---- duo.orig/clients/client_base.py	2013-01-08 13:01:31.000000000 +0100
-+++ duo/clients/client_base.py	2013-02-06 14:50:28.000000000 +0100
+--- duo.orig/clients/client_base.py	2013-04-15 09:49:27.000000000 +0200
++++ duo/clients/client_base.py	2013-04-15 09:52:17.000000000 +0200
 @@ -8,7 +8,7 @@
  logging.getLogger().setLevel(logging.DEBUG)
  
  slice_path = Ice.getSliceDir()
 -Ice.loadSlice("-I{0} -I.. --all ../slice/DUO.ice".format(slice_path))
-+Ice.loadSlice("-I{0} -I{1} --all {1}/DUO.ice".format(slice_path, '/usr/share/duo/slice'))
++Ice.loadSlice("-I{0} -I{1} --all {1}/DUO.ice".format(slice_path, '/usr/share/slice/duo'))
  
  
- def closeOnSystemExit(mth):
+ def shutdownOnSystemExit(mth):
 Index: duo/clients/duo-client-byte
 ===================================================================
---- duo.orig/clients/duo-client-byte	2013-01-08 13:01:31.000000000 +0100
-+++ duo/clients/duo-client-byte	2013-02-06 14:50:28.000000000 +0100
+--- duo.orig/clients/duo-client-byte	2013-04-11 08:52:42.000000000 +0200
++++ duo/clients/duo-client-byte	2013-04-15 09:52:17.000000000 +0200
 @@ -5,7 +5,7 @@
  import logging
  import Ice
@@ -130,8 +130,8 @@ Index: duo/clients/duo-client-byte
 +    ByteClient().main(sys.argv, "/etc/duo/icestorm-client.cfg")
 Index: duo/dummies/dummy_gui.py
 ===================================================================
---- duo.orig/dummies/dummy_gui.py	2013-01-08 13:01:31.000000000 +0100
-+++ duo/dummies/dummy_gui.py	2013-02-06 14:50:28.000000000 +0100
+--- duo.orig/dummies/dummy_gui.py	2013-04-11 08:52:42.000000000 +0200
++++ duo/dummies/dummy_gui.py	2013-04-15 09:52:17.000000000 +0200
 @@ -66,7 +66,7 @@
  
  class GUI(GladeWrapper):
@@ -143,8 +143,8 @@ Index: duo/dummies/dummy_gui.py
  
 Index: duo/dummies/duo-dummy-byte
 ===================================================================
---- duo.orig/dummies/duo-dummy-byte	2013-01-08 13:01:31.000000000 +0100
-+++ duo/dummies/duo-dummy-byte	2013-02-06 14:50:28.000000000 +0100
+--- duo.orig/dummies/duo-dummy-byte	2013-04-11 08:52:42.000000000 +0200
++++ duo/dummies/duo-dummy-byte	2013-04-15 09:52:17.000000000 +0200
 @@ -3,8 +3,7 @@
  
  import sys
@@ -163,8 +163,8 @@ Index: duo/dummies/duo-dummy-byte
 +    sys.exit(dummy.main(sys.argv, "/etc/duo/istaf-client.cfg"))
 Index: duo/servers/duo-icestorm
 ===================================================================
---- duo.orig/servers/duo-icestorm	2013-01-08 13:01:31.000000000 +0100
-+++ duo/servers/duo-icestorm	2013-02-06 14:50:28.000000000 +0100
+--- duo.orig/servers/duo-icestorm	2013-04-11 08:52:42.000000000 +0200
++++ duo/servers/duo-icestorm	2013-04-15 09:52:17.000000000 +0200
 @@ -5,5 +5,5 @@
  
  rm -fr "$DB_DIR"
@@ -175,8 +175,8 @@ Index: duo/servers/duo-icestorm
 +icebox --Ice.Config=/etc/duo/icestorm.cfg
 Index: duo/servers/duo-istaf
 ===================================================================
---- duo.orig/servers/duo-istaf	2013-02-06 14:50:07.000000000 +0100
-+++ duo/servers/duo-istaf	2013-02-06 14:52:26.000000000 +0100
+--- duo.orig/servers/duo-istaf	2013-04-11 08:52:42.000000000 +0200
++++ duo/servers/duo-istaf	2013-04-15 09:52:17.000000000 +0200
 @@ -3,13 +3,13 @@
  
  DB_DIR=/tmp/istaf-db

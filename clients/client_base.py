@@ -11,7 +11,7 @@ slice_path = Ice.getSliceDir()
 Ice.loadSlice("-I{0} -I.. --all ../slice/DUO.ice".format(slice_path))
 
 
-def closeOnSystemExit(mth):
+def shutdownOnSystemExit(mth):
     def _deco(self, *args, **kwargs):
         try:
             return mth(self, *args, **kwargs)
@@ -27,7 +27,7 @@ class ClientException(Exception):
 
 
 class ClientBase(Ice.Application):
-    @closeOnSystemExit
+    @shutdownOnSystemExit
     def run(self, args):
         self.build_parser()
 

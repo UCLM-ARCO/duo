@@ -7,8 +7,11 @@ install: clean
 	install -m 644 *.py $(DESTDIR)/usr/share/pyshared/duo/dummies/
 	touch $(DESTDIR)/usr/share/pyshared/duo/__init__.py
 
-	install -vd $(DESTDIR)/usr/share/duo/dummy/pixmaps/
-	install -m 644 *.{ice,glade} $(DESTDIR)/usr/share/duo/dummy/
+	install -vd $(DESTDIR)/usr/share/slice/duo/dummy
+	install -m 644 *.ice $(DESTDIR)/usr/share/slice/duo/dummy/
+
+	install -vd $(DESTDIR)/usr/share/duo/dummy/pixmaps
+	install -m 644 *.glade $(DESTDIR)/usr/share/duo/dummy/
 	install -m 644 pixmaps/* $(DESTDIR)/usr/share/duo/dummy/pixmaps/
 
 	install -vd $(DESTDIR)/usr/bin/
