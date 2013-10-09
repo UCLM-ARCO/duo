@@ -5,9 +5,18 @@ from hamcrest import is_not, contains_string
 
 from prego import TestCase, Task, context
 from prego.net import listen_port, localhost
+from prego.debian import Package, installed
+
+
+def depends():
+    depends = Task()
+    depends.assert_that(Package('istaf'), installed())
 
 
 class BoolTests(TestCase):
+    def setUp(self):
+        depends()
+
     def test_set(self):
         context.port = 1234
         context.proxy = 'test -t:tcp -p $port'
