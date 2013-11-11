@@ -1,12 +1,24 @@
 # -*- mode: makefile, coding: utf-8 -*-
 
-CXX=g++-4.6
+CXX        = g++-4.6
+CXXFLAGS   = -fPIC
+SO_LIBNAME = libduoSlice.so
+SO_TARGET  = $(TARGETS_DIR)/$(SO_LIBNAME)
+
 include arco/slice.mk
 
-install:: clean
+all:: $(SO_TARGET)
+
+install:: all
 	install -vd $(DESTDIR)/usr/share/slice/duo
 	install -m 644 *.ice $(DESTDIR)/usr/share/slice/duo
+	install -m 644 $(SO_TARGET) $(DESTDIR)/usr/lib/
+
+$(SO_TARGET): $(SLICE_OBJ)
+	$(CXX) -fPIC -shared -Wl,-soname,$(SO_LIBNAME).34 $^ -o $@
 
 .PHONY: clean
 clean::
-	$(RM) *.o *.h *.cpp *~
+	$(RM) *.o *.h *.cpp *~ *.so*
+
+
