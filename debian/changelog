@@ -1,3 +1,16 @@
+duo (0.20131114-1) unstable; urgency=low
+
+  * New release
+  * Suitable for Ice 3.5
+
+ -- Oscar Aceña Herrera <oscaracena@gmail.com>  Thu, 14 Nov 2013 10:28:38 +0100
+
+duo (0.20131112-1) unstable; urgency=low
+
+  * New release
+
+ -- Oscar Aceña Herrera <oscaracena@gmail.com>  Tue, 12 Nov 2013 15:38:18 +0000
+
 duo (0.20131111-1) unstable; urgency=low
 
   * New release
