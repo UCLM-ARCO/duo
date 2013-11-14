@@ -1,3 +1,9 @@
+duo (0.20131114.1-1) unstable; urgency=low
+
+  * Downgrade from 3.5.1 to 3.5.0
+
+ -- Oscar Aceña Herrera <oscaracena@gmail.com>  Thu, 14 Nov 2013 13:31:10 +0100
+
 duo (0.20131114-1) unstable; urgency=low
 
   * New release
