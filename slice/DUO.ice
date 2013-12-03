@@ -1,4 +1,6 @@
 // -*- mode: c++; coding: utf-8 -*-
+//
+// slice2x DUO.ice -I /usr/share/Ice/slice
 
 #ifndef DUO_ice
 #define DUO_ice
@@ -90,6 +92,46 @@ module DUO {
     };
     interface RW extends R,W {};
   };
+
+
+  module Funcional {
+    interface Relative {
+      void inc(short nsteps);
+    };
+  };
+
+  interface Component {
+    Ice::StringSeq getAllFacets();
+  };
+
+  module Composite {
+
+    // Valid operations for byte, int, float, long
+    const string MIN = "minimum";  // lowest value
+    const string MAX = "maximum";  // highest value
+    const string AVG = "average";  // sum(0..n)/n
+    const string MED = "median";   // sort(0..n)[n/2]
+    const string HEI = "height";   // max-min
+
+    // Valid operations for bool
+    const string ANY = "any";      // true if any is true
+    const string ALL = "all";      // true if all are true
+
+    // Exceptions
+    exception InvalidTypeException { string tid; };
+    exception NoSuchObjectException { string oid; };
+
+    // Public Factory to create Composites
+    interface Factory {
+      Object* create(string scalarType) throws InvalidTypeException;
+      void destroy(Object* proxy) throws NoSuchObjectException;
+      Ice::StringSeq getAllowedTypes();
+    };
+
+    interface R extends DUO::Container::R, DUO::Component{};
+    interface W extends DUO::Container::RW, DUO::Component{};
+  };
+
 };
 
 #endif
