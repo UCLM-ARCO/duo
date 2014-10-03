@@ -1,6 +1,6 @@
 # -*- mode: makefile, coding: utf-8 -*-
 
-CXX        = g++-4.6
+CXX        = g++-4.7
 CXXFLAGS   = -fPIC
 SO_LIBNAME = libduoSlice.so
 SO_TARGET  = $(TARGETS_DIR)/$(SO_LIBNAME)
@@ -21,5 +21,3 @@ $(SO_TARGET): $(SLICE_OBJ)
 .PHONY: clean
 clean::
 	$(RM) *.o *.h *.cpp *~ *.so*
-
-

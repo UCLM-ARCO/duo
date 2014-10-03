@@ -1,3 +1,9 @@
+duo (0.20141003-1) unstable; urgency=low
+
+  * New release
+
+ -- David Villa Alises <David.Villa@gmail.com>  Fri, 03 Oct 2014 20:33:36 +0200
+
 duo (0.20131114.1-1) unstable; urgency=low
 
   * Downgrade from 3.5.1 to 3.5.0
