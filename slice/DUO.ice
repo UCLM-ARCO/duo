@@ -1,5 +1,5 @@
 // -*- mode: c++; coding: utf-8 -*-
-//
+
 // slice2x DUO.ice -I /usr/share/Ice/slice
 
 #ifndef DUO_ice
@@ -105,7 +105,7 @@ module DUO {
 	const string MIN = "minimum";  // lowest value
 	const string MAX = "maximum";  // highest value
 	const string AVG = "average";  // sum(0..n)/n
-	const string MED = "median";   // sort(0..n)
+	const string MED = "median";   // sort(0..n)[n/2]
 	const string HEI = "height";   // max-min
 
 	// Valid operations for bool
@@ -127,6 +127,11 @@ module DUO {
 	interface W extends DUO::Container::RW, DUO::Component{};
     };
 
+    // Device advertisement (for Service advertisement, see ASDF)
+    interface DeviceObserver {
+	void adv(string deviceId, string deviceType, Object* device);
+	void bye(string deviceId);
+    };
 };
 
 #endif

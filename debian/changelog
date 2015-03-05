@@ -1,3 +1,9 @@
+duo (0.20150304-1) unstable; urgency=low
+
+  * New release, add device discovery interface to DUO
+
+ -- Oscar Aceña Herrera <oscaracena@gmail.com>  Wed, 04 Mar 2015 14:33:06 +0100
+
 duo (0.20141105-1) unstable; urgency=low
 
   * New release
