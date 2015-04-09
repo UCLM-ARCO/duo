@@ -2,13 +2,14 @@ Source: duo
 Section: devel
 Priority: extra
 Maintainer: ARCO Research Group <sysadm@arco.esi.uclm.es>
-Uploaders: Oscar Aceña Herrera <oscaracena@gmail.com>, David Villa Alises <David.Villa@gmail.com>
-Build-Depends: debhelper (>= 7.0.50~), python, arco-devel, quilt, zeroc-ice35
-Standards-Version: 3.9.5
+Uploaders: Oscar Aceña Herrera <oscaracena@gmail.com>,
+	   David Villa Alises <David.Villa@gmail.com>
+Build-Depends: debhelper (>= 7.0.50~), python, quilt
+Standards-Version: 3.9.6
 Homepage: http://arco.esi.uclm.es
 
 Package: duo
-Architecture: any
+Architecture: all
 Depends: ${misc:Depends}, ${shlibs:Depends}, ${python:Depends}, zeroc-ice35
 Replaces: hesperia-slice, duo-slice
 Description: Arco DUO interfaces: slices, dummies, clients, tools, etc.
