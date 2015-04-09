@@ -4,10 +4,12 @@
 
 module ASD  {
 
-  interface Listener {
-    idempotent void adv(Object* prx);
-    idempotent void bye(Ice::Identity oid);
+    interface Listener {
+	["deprecated:ASD module is deprecated, please use DUO instead."]
+	idempotent void adv(Object* prx);
+
+	["deprecated:ASD module is deprecated, please use DUO instead."]
+	idempotent void bye(Ice::Identity oid);
   };
 
 };
-

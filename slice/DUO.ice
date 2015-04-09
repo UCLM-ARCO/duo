@@ -127,11 +127,18 @@ module DUO {
 	interface W extends DUO::Container::RW, DUO::Component{};
     };
 
-    // Device advertisement (for Service advertisement, see ASDF)
+    // Device advertisement
     interface DeviceObserver {
 	void adv(string deviceId, string deviceType, Object* device);
 	void bye(string deviceId);
     };
+
+    // Service advertisement
+    interface Listener {
+	idempotent void adv(Object* prx);
+	idempotent void bye(Ice::Identity oid);
+    };
+
 };
 
 #endif
