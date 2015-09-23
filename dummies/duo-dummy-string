@@ -1,0 +1,65 @@
+#!/usr/bin/python -u
+# -*- mode: python; coding: utf-8 -*-
+
+import sys
+
+from dummy_base import Dummy, MetaDummy
+from dummy_gui import GUI
+
+
+class StringGUI(GUI):
+    def __init__(self, model, state):
+        GUI.__init__(self, model)
+        self.wg_window.set_title("Dummy String")
+        self.wg_string_button.set_active(state)
+
+    def create_content(self):
+        self.wg_string_on_image.set_from_file('pixmaps/bulb-true.png')
+        self.wg_string_off_image.set_from_file('pixmaps/bulb-false.png')
+
+        self.wg_string_button.connect('toggled', self.on_string_toogle)
+
+        widget = self.wg_string_content
+        widget.unparent()
+        return widget
+
+    def update(self):
+        self._update_ui(self._model.get_state())
+
+    def on_string_toogle(self, widget):
+        self._update_ui(widget.get_active())
+        self._update_model(widget.get_active())
+
+    def _update_ui(self, state):
+        if state:
+            self.wg_string_on_image.show()
+            self.wg_string_off_image.hide()
+        else:
+            self.wg_string_off_image.show()
+            self.wg_string_on_image.hide()
+
+    def _update_model(self, state):
+        self._model.set_state(state)
+
+
+class DummyString(Dummy):
+    def add_options(self):
+        self.arg_parser.add_argument(
+            'interface', choices=('R', 'W', 'RW', 'RWA'), type=str,
+            help='interface to implement')
+        self.arg_parser.add_argument(
+            '--init', dest='state', type=str, help="initial state",
+            default="")
+
+    def do_create_servant(self):
+        iface = "IString.{0}".format(self.args.interface)
+        dummyClass = MetaDummy(iface)
+        return dummyClass(self.args.state)
+
+    def do_create_gui(self):
+        return StringGUI(self, self.args.state)
+
+
+if __name__ == "__main__":
+    dummy = DummyString()
+    sys.exit(dummy.main(sys.argv, "../servers/istaf-client.cfg"))

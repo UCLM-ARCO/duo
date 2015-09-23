@@ -43,13 +43,13 @@ module DummyDUO {
 //     interface RPSA extends DUO::IFloat::R, ASD::PropHldr, ASD::Search, DUO::Active::R {};
 //   };
 
-//   module IString {
+  module IString {
 //     interface RA extends DUO::IString::R, DUO::Active::R, DUO::Active::W {};
-//     interface RW extends DUO::IString::R, DUO::IString::W {};
+    interface RW extends DUO::IString::R, DUO::IString::W {};
 //     interface RWP extends RW, ASD::PropHldr {};
 //     interface RWPS extends RWP, ASD::Search {};
 //     interface RWPSA extends RWPS, DUO::Active::R, DUO::Active::W {};
-//   };
+  };
 
 //   module IByteSeq {
 //     interface RP extends DUO::IBool::R, ASD::PropHldr {};
