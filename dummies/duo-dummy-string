@@ -11,35 +11,18 @@ class StringGUI(GUI):
     def __init__(self, model, state):
         GUI.__init__(self, model)
         self.wg_window.set_title("Dummy String")
-        self.wg_string_button.set_active(state)
 
     def create_content(self):
-        self.wg_string_on_image.set_from_file('pixmaps/bulb-true.png')
-        self.wg_string_off_image.set_from_file('pixmaps/bulb-false.png')
-
-        self.wg_string_button.connect('toggled', self.on_string_toogle)
-
-        widget = self.wg_string_content
-        widget.unparent()
-        return widget
+        raise NotImplementedError
 
     def update(self):
-        self._update_ui(self._model.get_state())
-
-    def on_string_toogle(self, widget):
-        self._update_ui(widget.get_active())
-        self._update_model(widget.get_active())
+        raise NotImplementedError
 
     def _update_ui(self, state):
-        if state:
-            self.wg_string_on_image.show()
-            self.wg_string_off_image.hide()
-        else:
-            self.wg_string_off_image.show()
-            self.wg_string_on_image.hide()
+        raise NotImplementedError
 
     def _update_model(self, state):
-        self._model.set_state(state)
+        raise NotImplementedError
 
 
 class DummyString(Dummy):

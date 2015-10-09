@@ -1,172 +1,172 @@
 Index: duo/servers/icestorm.cfg
 ===================================================================
---- duo.orig/servers/icestorm.cfg	2013-04-11 08:52:42.000000000 +0200
-+++ duo/servers/icestorm.cfg	2013-04-15 09:52:17.000000000 +0200
+--- duo.orig/servers/icestorm.cfg
++++ duo/servers/icestorm.cfg
 @@ -1,7 +1,7 @@
  # -*- mode: conf; coding: utf-8 -*-
-
+ 
  # Local IceStorm service, icebox config
 -IceBox.Service.IceStorm = IceStormService:createIceStorm --Ice.Config=icestorm.cfg
 +IceBox.Service.IceStorm = IceStormService:createIceStorm --Ice.Config=/etc/duo/icestorm.cfg
  IceBox.ServiceManager.Endpoints = tcp -h 127.0.0.1 -p 20000
  IceBox.PrintServicesReady = IceStorm Service
-
+ 
 Index: duo/dummies/dummy_base.py
 ===================================================================
---- duo.orig/dummies/dummy_base.py	2013-04-15 09:48:19.000000000 +0200
-+++ duo/dummies/dummy_base.py	2013-04-15 09:52:17.000000000 +0200
-@@ -14,12 +14,13 @@
-
-
+--- duo.orig/dummies/dummy_base.py
++++ duo/dummies/dummy_base.py
+@@ -14,12 +14,13 @@ logging.basicConfig(level=logging.DEBUG,
+ 
+ 
  def loadSlice(name):
 -    args = '-I{0} -I. -I../slice --all {1}'
 -    Ice.loadSlice(args.format(Ice.getSliceDir(), name))
 +    prefix = "/usr/share/slice/duo"
 +    args = '-I{0} -I{1}/dummy -I{1} --all {2}'
 +    Ice.loadSlice(args.format(Ice.getSliceDir(), prefix, name))
-
-
+ 
+ 
 -loadSlice('dummy.ice')
 -loadSlice('../slice/DUO.ice')
 +loadSlice('/usr/share/slice/duo/dummy/dummy.ice')
 +loadSlice('/usr/share/slice/duo/DUO.ice')
-
+ 
  import DUO
-
+ 
 Index: duo/clients/duo-client-bool
 ===================================================================
---- duo.orig/clients/duo-client-bool	2013-04-11 08:52:42.000000000 +0200
-+++ duo/clients/duo-client-bool	2013-04-15 09:52:17.000000000 +0200
-@@ -5,7 +5,7 @@
+--- duo.orig/clients/duo-client-bool
++++ duo/clients/duo-client-bool
+@@ -5,7 +5,7 @@ import sys
  import logging
  import Ice
-
+ 
 -from client_base import ClientBase, ClientException
 +from duo.clients import ClientBase, ClientException
  import DUO
-
-
-@@ -35,4 +35,4 @@
-
-
+ 
+ 
+@@ -35,4 +35,4 @@ class BoolClient(ClientBase):
+ 
+ 
  if __name__ == "__main__":
 -    BoolClient().main(sys.argv, "../servers/icestorm-client.cfg")
 +    BoolClient().main(sys.argv, "/etc/duo/icestorm-client.cfg")
 Index: duo/dummies/duo-dummy-bool
 ===================================================================
---- duo.orig/dummies/duo-dummy-bool	2013-04-15 09:45:31.000000000 +0200
-+++ duo/dummies/duo-dummy-bool	2013-04-15 09:52:17.000000000 +0200
+--- duo.orig/dummies/duo-dummy-bool
++++ duo/dummies/duo-dummy-bool
 @@ -3,8 +3,7 @@
-
+ 
  import sys
-
+ 
 -from dummy_base import Dummy, MetaDummy
 -from dummy_gui import GUI
 +from duo.dummies import Dummy, MetaDummy, GUI
-
-
+ 
+ 
  class BoolGUI(GUI):
-@@ -14,8 +13,8 @@
+@@ -14,8 +13,8 @@ class BoolGUI(GUI):
          self.wg_bool_button.set_active(state)
-
+ 
      def create_content(self):
 -        self.wg_bool_on_image.set_from_file('pixmaps/bulb-true.png')
 -        self.wg_bool_off_image.set_from_file('pixmaps/bulb-false.png')
 +        self.wg_bool_on_image.set_from_file('/usr/share/duo/dummy/pixmaps/bulb-true.png')
 +        self.wg_bool_off_image.set_from_file('/usr/share/duo/dummy/pixmaps/bulb-false.png')
-
+ 
          self.wg_bool_button.connect('toggled', self.on_bool_toogle)
-
-@@ -62,4 +61,4 @@
-
+ 
+@@ -62,4 +61,4 @@ class DummyBool(Dummy):
+ 
  if __name__ == "__main__":
      dummy = DummyBool()
 -    sys.exit(dummy.main(sys.argv, "../servers/istaf-client.cfg"))
 +    sys.exit(dummy.main(sys.argv, "/etc/duo/istaf-client.cfg"))
 Index: duo/servers/istaf.cfg
 ===================================================================
---- duo.orig/servers/istaf.cfg	2013-04-11 08:52:42.000000000 +0200
-+++ duo/servers/istaf.cfg	2013-04-15 09:52:17.000000000 +0200
+--- duo.orig/servers/istaf.cfg
++++ duo/servers/istaf.cfg
 @@ -1,7 +1,7 @@
  # -*- mode:conf; coding:utf-8 -*-
-
+ 
  # Local ISTAF service, pyicebox config
 -IceBox.Service.ISTopicAsFacet = istaf.Service --Ice.Config=istaf.cfg
 +IceBox.Service.ISTopicAsFacet = istaf.Service --Ice.Config=/etc/duo/istaf.cfg
  IceBox.ServiceManager.Endpoints = tcp -p 21000
  IceBox.PrintServicesReady = ISTAF Service
-
+ 
 Index: duo/clients/client_base.py
 ===================================================================
---- duo.orig/clients/client_base.py	2013-04-15 09:49:27.000000000 +0200
-+++ duo/clients/client_base.py	2013-04-15 09:52:17.000000000 +0200
-@@ -8,7 +8,7 @@
+--- duo.orig/clients/client_base.py
++++ duo/clients/client_base.py
+@@ -8,7 +8,7 @@ import Ice
  logging.getLogger().setLevel(logging.DEBUG)
-
+ 
  slice_path = Ice.getSliceDir()
 -Ice.loadSlice("-I{0} -I.. --all ../slice/DUO.ice".format(slice_path))
 +Ice.loadSlice("-I{0} -I{1} --all {1}/DUO.ice".format(slice_path, '/usr/share/slice/duo'))
-
-
+ 
+ 
  def shutdownOnSystemExit(mth):
 Index: duo/clients/duo-client-byte
 ===================================================================
---- duo.orig/clients/duo-client-byte	2013-04-11 08:52:42.000000000 +0200
-+++ duo/clients/duo-client-byte	2013-04-15 09:52:17.000000000 +0200
-@@ -5,7 +5,7 @@
+--- duo.orig/clients/duo-client-byte
++++ duo/clients/duo-client-byte
+@@ -5,7 +5,7 @@ import sys
  import logging
  import Ice
-
+ 
 -from client_base import ClientBase, ClientException
 +from duo.clients import ClientBase, ClientException
  import DUO
-
-
-@@ -37,4 +37,4 @@
-
-
+ 
+ 
+@@ -37,4 +37,4 @@ class ByteClient(ClientBase):
+ 
+ 
  if __name__ == "__main__":
 -    ByteClient().main(sys.argv, "../servers/icestorm-client.cfg")
 +    ByteClient().main(sys.argv, "/etc/duo/icestorm-client.cfg")
 Index: duo/dummies/dummy_gui.py
 ===================================================================
---- duo.orig/dummies/dummy_gui.py	2013-04-11 08:52:42.000000000 +0200
-+++ duo/dummies/dummy_gui.py	2013-04-15 09:52:17.000000000 +0200
-@@ -66,7 +66,7 @@
-
+--- duo.orig/dummies/dummy_gui.py
++++ duo/dummies/dummy_gui.py
+@@ -66,7 +66,7 @@ class GladeWrapper(object):
+ 
  class GUI(GladeWrapper):
      def __init__(self, model):
 -        GladeWrapper.__init__(self, "dummy.glade")
 +        GladeWrapper.__init__(self, "/usr/share/duo/dummy/dummy.glade")
          self._model = model
          self._model.attach(self)
-
+ 
 Index: duo/dummies/duo-dummy-byte
 ===================================================================
---- duo.orig/dummies/duo-dummy-byte	2013-04-11 08:52:42.000000000 +0200
-+++ duo/dummies/duo-dummy-byte	2013-04-15 09:52:17.000000000 +0200
+--- duo.orig/dummies/duo-dummy-byte
++++ duo/dummies/duo-dummy-byte
 @@ -3,8 +3,7 @@
-
+ 
  import sys
-
+ 
 -from dummy_base import Dummy, MetaDummy
 -from dummy_gui import GUI
 +from duo.dummies import Dummy, MetaDummy, GUI
-
-
+ 
+ 
  class ByteGUI(GUI):
-@@ -47,4 +46,4 @@
-
+@@ -47,4 +46,4 @@ class DummyByte(Dummy):
+ 
  if __name__ == "__main__":
      dummy = DummyByte()
 -    sys.exit(dummy.main(sys.argv, "../servers/istaf-client.cfg"))
 +    sys.exit(dummy.main(sys.argv, "/etc/duo/istaf-client.cfg"))
 Index: duo/servers/duo-icestorm
 ===================================================================
---- duo.orig/servers/duo-icestorm	2013-04-11 08:52:42.000000000 +0200
-+++ duo/servers/duo-icestorm	2013-04-15 09:52:17.000000000 +0200
-@@ -5,5 +5,5 @@
-
+--- duo.orig/servers/duo-icestorm
++++ duo/servers/duo-icestorm
+@@ -5,5 +5,5 @@ DB_DIR=/tmp/icestorm-db
+ 
  rm -fr "$DB_DIR"
  mkdir -p  "$DB_DIR"
 -grep --color IceStorm.TopicManager.Proxy icestorm-client.cfg
@@ -175,22 +175,61 @@ Index: duo/servers/duo-icestorm
 +icebox --Ice.Config=/etc/duo/icestorm.cfg
 Index: duo/servers/duo-istaf
 ===================================================================
---- duo.orig/servers/duo-istaf	2013-04-11 08:52:42.000000000 +0200
-+++ duo/servers/duo-istaf	2013-04-15 09:52:17.000000000 +0200
+--- duo.orig/servers/duo-istaf
++++ duo/servers/duo-istaf
 @@ -3,13 +3,13 @@
-
+ 
  DB_DIR=/tmp/istaf-db
-
+ 
 -./duo-icestorm &
 +duo-icestorm &
  while ! fuser -n tcp 10000; do sleep 0.5; done
  IS_PID=$(pidof icebox | awk '{print $NF}')
-
+ 
  rm -fr "$DB_DIR"
  mkdir -p  "$DB_DIR"
 -grep --color ISTopicAsFacet.TopicManager.Proxy istaf-client.cfg
 -pyicebox --Ice.Config=istaf.cfg
 +grep --color ISTopicAsFacet.TopicManager.Proxy /etc/duo/istaf-client.cfg
 +pyicebox --Ice.Config=/etc/duo/istaf.cfg
-
+ 
  kill $IS_PID
+Index: duo/dummies/duo-dummy-string
+===================================================================
+--- duo.orig/dummies/duo-dummy-string
++++ duo/dummies/duo-dummy-string
+@@ -3,8 +3,7 @@
+ 
+ import sys
+ 
+-from dummy_base import Dummy, MetaDummy
+-from dummy_gui import GUI
++from duo.dummies import Dummy, MetaDummy, GUI
+ 
+ 
+ class StringGUI(GUI):
+@@ -45,4 +44,4 @@ class DummyString(Dummy):
+ 
+ if __name__ == "__main__":
+     dummy = DummyString()
+-    sys.exit(dummy.main(sys.argv, "../servers/istaf-client.cfg"))
++    sys.exit(dummy.main(sys.argv, "/etc/duo/istaf-client.cfg"))
+Index: duo/clients/duo-client-string
+===================================================================
+--- duo.orig/clients/duo-client-string
++++ duo/clients/duo-client-string
+@@ -5,7 +5,7 @@ import sys
+ import logging
+ import Ice
+ 
+-from client_base import ClientBase, ClientException
++from duo.clients import ClientBase, ClientException
+ import DUO
+ 
+ 
+@@ -34,4 +34,4 @@ class StringClient(ClientBase):
+ 
+ 
+ if __name__ == "__main__":
+-    StringClient().main(sys.argv, "../servers/icestorm-client.cfg")
++    StringClient().main(sys.argv, "/etc/duo/icestorm-client.cfg")
