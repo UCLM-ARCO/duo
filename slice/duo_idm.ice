@@ -7,16 +7,16 @@
 
 #include <idm/idm.ice>
 
-module IDM {
+module DUO {
 
-    module DUO {
+    module IDM {
 
 	module IBool {
-	    interface W { void set(bool v, IDM::Address oid); };
+	    interface W { void set(bool v, IDM::Address source); };
 	};
 
 	module IInt {
-	    interface W { void set(int v, IDM::Address oid); };
+	    interface W { void set(int v, IDM::Address source); };
 	};
 
 	module Active {
@@ -30,8 +30,8 @@ module IDM {
 	};
 
 	interface Listener {
-	    void adv(IDM::Address prx);
-	    void bye(IDM::Address oid);
+	    void adv(IDM::Address obj);
+	    void bye(IDM::Address obj);
 	};
     };
 };
