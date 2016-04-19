@@ -1,0 +1,38 @@
+body {
+    padding-top: 20px;
+    background: #EDEDED;
+}
+
+.thumbnail {
+    -webkit-box-shadow: 4px 4px 25px -8px rgba(0,0,0,0.75);
+    -moz-box-shadow: 4px 4px 25px -8px rgba(0,0,0,0.75);
+    box-shadow: 4px 4px 25px -8px rgba(0,0,0,0.75);
+}
+
+.thumbnail > .body {
+    padding: 20px 10px;
+}
+
+.thumbnail > .caption {
+    margin: 0px;
+    border-top: 2px solid #0BAC4C;
+    color: #5A5A5A;
+}
+
+.thumbnail > .caption h4 {
+    display: inline;
+}
+
+.thumbnail > .caption button {
+    margin-left: 5px;
+    color: #5A5A5A;
+}
+
+.capitalize {
+    text-transform: capitalize;
+}
+
+#qrcode img {
+    display: inline !important;
+    margin: 10px;
+}

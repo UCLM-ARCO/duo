@@ -1,0 +1,58 @@
+<html ng-app="dummyBool">
+  <head>
+    <title>DUO IDM IBool W</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"></link>
+    <link rel="stylesheet" href="/static/css/style.css"></link>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.min.js"></script>
+
+    <script src="/static/js/qrcode.min.js"></script>
+    <script src="/static/js/app.js"></script>
+  </head>
+
+  <body>
+    <div class="container" ng-controller="MainCtrl">
+
+      <div class="row">
+	<div class="col-sm-offset-3 col-sm-6
+		    col-sm-offset-3 col-md-4">
+	  <div class="thumbnail">
+	    <div class="body text-center">
+	      <img ng-src="/static/images/[[ state && 'bulb-green.png' || 'bulb-red.png' ]]">
+	    </div>
+	    <div class="caption">
+	      <div>
+		<h4>IDM Address: <b>[[ addr ]]</b></h4>
+		<button class="btn btn-default btn-xs pull-right" title="Show QR code"
+			ng-click="on_show_qr()">
+		  <i class="fa fa-fw fa-qrcode"></i></button>
+		<button class="btn btn-default btn-xs pull-right" title="Toggle state"
+			ng-click="on_toggle_state()">
+		  <i class="fa fa-fw fa-toggle-on"></i></button>
+	      </div>
+	      State: <b class="capitalize">[[ state ]]</b>
+	    </div>
+	  </div>
+	</div>
+      </div>
+
+      <div class="row" ng-show="qrcode">
+	<div class="col-sm-offset-3 col-sm-6
+		    col-sm-offset-3 col-md-4">
+	  <div id="qrcode" class="thumbnail text-center"></div>
+	</div>
+      </div>
+
+    </div>
+  </body>
+</html>
+
+<!-- Local Variables: -->
+<!--   coding: utf-8 -->
+<!--   truncate-lines: true -->
+<!-- End: -->
