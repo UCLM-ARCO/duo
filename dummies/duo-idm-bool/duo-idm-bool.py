@@ -100,7 +100,7 @@ class WebServer:
     def event_loop(self):
         self.should_stop = False
 
-        self.app.run(threaded=True, port=self.args.web_server_port)
+        self.app.run(threaded=True, host="0.0.0.0", port=self.args.web_server_port)
         self.ic.destroy()
         self.servant.stop()
         self.should_stop = True
