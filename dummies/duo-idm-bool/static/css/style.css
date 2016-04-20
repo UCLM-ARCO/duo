@@ -15,7 +15,7 @@ body {
 
 .thumbnail > .caption {
     margin: 0px;
-    border-top: 2px solid #0BAC4C;
+    border-top: 2px solid #3A75BB; /* #0BAC4C; */
     color: #5A5A5A;
 }
 

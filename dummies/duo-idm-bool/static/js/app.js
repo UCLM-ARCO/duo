@@ -15,6 +15,9 @@ app.controller("MainCtrl", function($scope) {
 
     $scope.$watch('address', on_address_change);
     sync_from_server($scope)
+    new EventSource("/updates").onmessage = function(event) {
+	on_incomming_update($scope, JSON.parse(event.data));
+    }
 
     $scope.on_toggle_state = function() {
 	$scope.state = ! $scope.state;
@@ -42,4 +45,9 @@ function sync_from_server($scope) {
 	    $scope.$apply();
 	},
     });
+}
+
+function on_incomming_update($scope, args) {
+    $scope.state = args.state;
+    $scope.$apply();
 }

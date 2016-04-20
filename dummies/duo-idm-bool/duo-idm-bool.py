@@ -7,7 +7,8 @@ import Ice
 import json
 import argparse
 import thing
-from flask import Flask, render_template, request
+from threading import Event
+from flask import Flask, render_template, request, Response
 
 pwd = os.path.abspath(os.path.dirname(__file__))
 slice_path = os.path.join(pwd, "active-bool.ice")
@@ -26,13 +27,24 @@ class IBoolWI(Dummy.ActiveBool):
     def __init__(self, args, router):
         self.args = args
         self.state = args.state == "True"
+        self.state_changes = Event()
         self.address = args.address
         self.router = router
         self.observer = None
 
+    def stop(self):
+        # wake all waiting threads
+        self.state_changes.set()
+
+    def get_state_when_changed(self):
+        self.state_changes.wait()
+        self.state_changes.clear()
+        return self.state
+
     def set(self, state, source, current=None):
         print(" * Set state to {}".format(state))
-        self.sate = state
+        self.state = state
+        self.state_changes.set()
 
         if self.observer is None:
             return
@@ -56,6 +68,7 @@ class IBoolWI(Dummy.ActiveBool):
             observer = self.addressToIdentity(observer)
             ic = current.adapter.getCommunicator()
             self.observer = self.router.ice_identity(ic.stringToIdentity(observer))
+            self.observer = self.observer.ice_oneway()
             self.observer = DUO.IDM.IBool.WPrx.uncheckedCast(self.observer)
 
         print(" * Set observer to {}".format(observer))
@@ -85,8 +98,12 @@ class WebServer:
         self.event_loop()
 
     def event_loop(self):
-        self.app.run(port=self.args.web_server_port)
+        self.should_stop = False
+
+        self.app.run(threaded=True, port=self.args.web_server_port)
         self.ic.destroy()
+        self.servant.stop()
+        self.should_stop = True
         print("\rBye!")
 
     def announce_on_router(self):
@@ -104,9 +121,6 @@ class WebServer:
         tags = ["consumer"]
         if self.args.enable_observer:
             tags.append("producer")
-
-            # FIXME: 'logic wiring' app could handle only one type at a time
-            tags.remove("consumer")
 
         t_tags = thing.from_(tags)
         t_name = thing.from_(self.args.name)
@@ -175,6 +189,20 @@ class WebServer:
     def set_state(self):
         new_state = request.args['state'] == "true"
         self.servant.set(new_state, "")
+        return ""
+
+    @app.route("/updates")
+    @add_self
+    def send_updates(self):
+        def wait_for_changes():
+            while True:
+                state = self.servant.get_state_when_changed()
+                if self.should_stop:
+                    return
+                data = {"state": state}
+                yield "data: {}\n\n".format(json.dumps(data))
+
+        return Response(wait_for_changes(), mimetype="text/event-stream")
 
 
 if __name__ == "__main__":
