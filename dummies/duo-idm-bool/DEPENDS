@@ -1,1 +1,11 @@
-deb:python-flask
+#!/usr/local/bin/ansible-playbook -v
+
+---
+- hosts: localhost
+  become: yes
+
+  tasks:
+  - apt: name=python-flask update_cache=yes
+  - apt: name=property-service-simple
+  - apt: name=idm
+  - apt: name=slice-thing
