@@ -36,3 +36,11 @@ body {
     display: inline !important;
     margin: 10px;
 }
+
+.animated-show-hide {
+    animation: bounceInDown 0.5s;
+}
+
+.animated-show-hide.ng-hide {
+    animation: bounceOutUp 1s;
+}
