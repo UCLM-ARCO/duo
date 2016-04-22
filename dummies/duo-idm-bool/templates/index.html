@@ -25,18 +25,24 @@
 		    col-sm-offset-3 col-md-4">
 	  <div class="thumbnail">
 	    <div class="body text-center">
-	      <img ng-src="/static/images/[[ state && 'bulb-green.png' || 'bulb-red.png' ]]">
+	      <div class="icon-holder"
+		   ng-class="state ? 'green' : 'red'"
+		   ng-click="on_toggle_state()">
+		<i class="fa fa-inverse" ng-class="'fa-' + icon"></i>
+	      </div>
 	    </div>
 	    <div class="caption">
 	      <div>
 		<h4>IDM Address: <b>[[ address ]]</b></h4>
 		<button class="btn btn-default btn-xs pull-right" title="Show QR code"
 			ng-click="show_qr = !show_qr">
-		  <i class="fa fa-fw fa-qrcode"></i></button>
+		  <i class="fa fa-fw fa-qrcode text-primary"></i></button>
 		<button class="btn btn-default btn-xs pull-right" title="Toggle state"
 			ng-click="on_toggle_state()">
-		  <i class="fa fa-fw fa-toggle-on"></i></button>
+		  <i class="fa fa-fw text-primary"
+		     ng-class="state ? 'fa-toggle-on' : 'fa-toggle-off'"></i></button>
 	      </div>
+	      Observer: <b>[[ observer ]]</b> |
 	      State: <b class="capitalize">[[ state ]]</b>
 	    </div>
 	  </div>

@@ -15,7 +15,7 @@ body {
 
 .thumbnail > .caption {
     margin: 0px;
-    border-top: 2px solid #3A75BB; /* #0BAC4C; */
+    border-top: 2px solid #3A75BB;
     color: #5A5A5A;
 }
 
@@ -43,4 +43,24 @@ body {
 
 .animated-show-hide.ng-hide {
     animation: bounceOutUp 1s;
+}
+
+.icon-holder {
+    width: 178px;
+    height: 178px;
+    margin: 0 auto;
+    border-radius: 18px;
+}
+
+.icon-holder i {
+    line-height: 178px;
+    font-size: 8em;
+}
+
+.icon-holder.red {
+    background-color: #CC2127;
+}
+
+.icon-holder.green {
+    background-color: #0BAC4C;
 }

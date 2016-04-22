@@ -32,6 +32,13 @@ class IBoolWI(Dummy.ActiveBool):
         self.router = router
         self.observer = None
 
+        if router is not None:
+            self.ic = router.ice_getCommunicator()
+
+        if args.observer is not None:
+            addr = self.identityToAddress(args.observer)
+            self.setObserver(addr)
+
     def stop(self):
         # wake all waiting threads
         self.state_changes.set()
@@ -49,11 +56,11 @@ class IBoolWI(Dummy.ActiveBool):
         if self.observer is None:
             return
 
-        print(" * Notify observer")
+        print(" * Notify observer: '{}'".format(self.observer))
         self.observer.set(state, "")
 
-    def setObserver(self, observer, current):
-        if not self.args.enable_observer:
+    def setObserver(self, observer, current=None):
+        if self.args.disable_observer or self.router is None:
             return
 
         is_null = True
@@ -66,15 +73,18 @@ class IBoolWI(Dummy.ActiveBool):
             observer = None
         else:
             observer = self.addressToIdentity(observer)
-            ic = current.adapter.getCommunicator()
-            self.observer = self.router.ice_identity(ic.stringToIdentity(observer))
+            self.observer = self.router.ice_identity(self.ic.stringToIdentity(observer))
+            self.observer = self.observer.ice_encodingVersion(Ice.Encoding_1_0)
             self.observer = self.observer.ice_oneway()
             self.observer = DUO.IDM.IBool.WPrx.uncheckedCast(self.observer)
 
-        print(" * Set observer to {}".format(observer))
+        print(" * Set observer to '{}'".format(self.observer))
 
     def addressToIdentity(self, address):
         return "".join("{:02x}".format(ord(c)) for c in address)
+
+    def identityToAddress(self, identity):
+        return "".join(chr(int(x, 16)) for x in identity.split(":"))
 
 
 class WebServer:
@@ -119,7 +129,7 @@ class WebServer:
         print(" * Setting properties on PropertyService")
 
         tags = ["consumer"]
-        if self.args.enable_observer:
+        if not self.args.disable_observer:
             tags.append("producer")
 
         t_tags = thing.from_(tags)
@@ -135,12 +145,14 @@ class WebServer:
         if self.router is None:
             print(" * WARN: IDM.Router.Proxy not defined")
         else:
+            print(" * IDM Router: '{}'".format(self.router))
             self.router = IDM.NeighborDiscovery.ListenerPrx.uncheckedCast(self.router)
 
         self.ps = self.ic.propertyToProxy("PropertyService.Proxy")
         if self.ps is None:
             print(" * WARN: PropertyService.Proxy not defined")
         else:
+            print(" * Property Server: '{}'".format(self.ps))
             self.ps = PropertyService.PropertyServerPrx.uncheckedCast(self.ps)
 
     def setup_servant(self):
@@ -161,9 +173,11 @@ class WebServer:
         parser.add_argument(
             '-n', dest="name", default="Dummy", help="Dummy's name")
         parser.add_argument(
-            '-i', dest="icon", default="bulb", help="Dummy's icon")
+            '-i', dest="icon", default="bulb", help="Dummy's icon (Font Awesome names)")
         parser.add_argument(
-            '--observer', dest="enable_observer", action="store_true", help="Enable Active.W iface")
+            '-o', dest="observer", default=None, help="Set observer address")
+        parser.add_argument(
+            '--disable-observer', action="store_true", help="Disable Active.W iface")
         parser.add_argument(
             '--port', dest="web_server_port", default=5000, type=int, help="Web server port")
 
@@ -182,6 +196,8 @@ class WebServer:
         return json.dumps({
             'state': self.servant.state,
             'address': self.servant.address,
+            'icon': self.args.icon,
+            'observer': self.args.observer,
         })
 
     @app.route("/set")

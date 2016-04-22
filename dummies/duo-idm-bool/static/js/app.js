@@ -10,7 +10,9 @@ var app = angular.module(
 
 app.controller("MainCtrl", function($scope) {
     $scope.state = false;
+    $scope.icon = "lightbulb-o";
     $scope.address = "AA:10";
+    $scope.observer = " - ";
     $scope.show_qr = false;
 
     $scope.$watch('address', on_address_change);
@@ -42,6 +44,8 @@ function sync_from_server($scope) {
 	    var data = JSON.parse(retval);
 	    $scope.state = data.state;
 	    $scope.address = data.address;
+	    $scope.icon = data.icon;
+	    $scope.observer = data.observer || " - ";
 	    $scope.$apply();
 	},
     });
