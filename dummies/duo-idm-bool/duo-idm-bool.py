@@ -81,7 +81,7 @@ class IBoolWI(Dummy.ActiveBool):
         print(" * Set observer to '{}'".format(self.observer))
 
     def addressToIdentity(self, address):
-        return "".join("{:02x}".format(ord(c)) for c in address)
+        return "".join("{:02X}".format(ord(c)) for c in address)
 
     def identityToAddress(self, identity):
         return "".join(chr(int(x, 16)) for x in identity.split(":"))
@@ -167,7 +167,7 @@ class WebServer:
     def parse_args(self, args):
         parser = argparse.ArgumentParser()
         parser.add_argument(
-            "-a", dest="address", default="AA:02", help="IDM Address")
+            "-a", dest="address", default="AA:02", help="IDM Address", type=str.upper)
         parser.add_argument(
             "-s", dest="state", default=False, choices=["True", "False"], help="Initial state")
         parser.add_argument(
@@ -175,7 +175,7 @@ class WebServer:
         parser.add_argument(
             '-i', dest="icon", default="bulb", help="Dummy's icon (Font Awesome names)")
         parser.add_argument(
-            '-o', dest="observer", default=None, help="Set observer address")
+            '-o', dest="observer", default=None, help="Set observer address", type=str.upper)
         parser.add_argument(
             '--disable-observer', action="store_true", help="Disable Active.W iface")
         parser.add_argument(
