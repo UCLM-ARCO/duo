@@ -16,12 +16,10 @@ class BoolClient(ClientBase):
             '--set', choices=('True', 'False'), help="set object's value")
         group.add_argument(
             '--get', action='store_true', help="get object's value")
-        group.add_argument(
-            '--no-checked-cast', action="store_true", help="avoid checked cast")
 
     def do_set(self):
         if self.args.no_checked_cast:
-            proxy = DUO.IBool.WPrx.checkedCast(self.proxy)
+            proxy = DUO.IBool.WPrx.uncheckedCast(self.proxy)
         else:
             proxy = DUO.IBool.WPrx.checkedCast(self.proxy)
 

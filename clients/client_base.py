@@ -44,6 +44,7 @@ class ClientBase(Ice.Application):
         self.arg_parser = argparse.ArgumentParser(description='Client')
         self.arg_parser.add_argument('proxy', help="proxy of remote object")
         self.arg_parser.add_argument('--facet', help="proxy facet to use")
+        self.arg_parser.add_argument('--no-checked-cast', help="avoid checked cast", action="store_true")
 
         self.add_options()
 
