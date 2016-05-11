@@ -59,7 +59,7 @@ class ClientBase(Ice.Application):
             self.proxy = self.proxy.ice_facet(self.args.facet)
 
     def run_actions(self):
-        if not self.args.set is None:
+        if self.args.set is not None:
             self.do_set()
         if self.args.get:
             self.do_get()
