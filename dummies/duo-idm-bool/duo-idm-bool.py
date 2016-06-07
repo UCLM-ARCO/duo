@@ -8,6 +8,7 @@ import json
 import argparse
 import thing
 from threading import Event
+import webbrowser
 from flask import Flask, render_template, request, Response
 
 pwd = os.path.abspath(os.path.dirname(__file__))
@@ -105,6 +106,7 @@ class WebServer:
         self.setup_servant()
         self.update_properties()
         self.announce_on_router()
+        webbrowser.open(self.server_url())
         self.event_loop()
 
     def event_loop(self):
@@ -115,6 +117,9 @@ class WebServer:
         self.servant.stop()
         self.should_stop = True
         print("\rBye!")
+
+    def server_url(self):
+        return 'http://0.0.0.0:{}/'.format(self.args.web_server_port)
 
     def announce_on_router(self):
         if self.router is None:
@@ -173,7 +178,7 @@ class WebServer:
         parser.add_argument(
             '-n', dest="name", default="Dummy", help="Dummy's name")
         parser.add_argument(
-            '-i', dest="icon", default="bulb", help="Dummy's icon (Font Awesome names)")
+            '-i', dest="icon", default="lightbulb-o", help="Dummy's icon (Font Awesome names)")
         parser.add_argument(
             '-o', dest="observer", default=None, help="Set observer address", type=str.upper)
         parser.add_argument(
