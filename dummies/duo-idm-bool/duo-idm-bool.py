@@ -133,11 +133,11 @@ class WebServer:
 
         print(" * Setting properties on PropertyService")
 
-        tags = ["consumer"]
-        if not self.args.disable_observer:
-            tags.append("producer")
+        # tags = ["consumer"]
+        # if not self.args.disable_observer:
+        #     tags.append("producer")
 
-        t_tags = thing.from_(tags)
+        t_tags = thing.from_(self.args.tags)
         t_name = thing.from_(self.args.name)
         t_icon = thing.from_(self.args.icon)
 
@@ -182,7 +182,8 @@ class WebServer:
         parser.add_argument(
             '-o', dest="observer", default=None, help="Set observer address", type=str.upper)
         parser.add_argument(
-            '--disable-observer', action="store_true", help="Disable Active.W iface")
+            '--tags', nargs='*', choices=['consumer', 'producer'], help="Set property 'tgas'")
+        #   '--disable-observer', action="store_true", help="Disable Active.W iface")
         parser.add_argument(
             '--port', dest="web_server_port", default=5000, type=int, help="Web server port")
 
