@@ -61,7 +61,8 @@ class IBoolWI(Dummy.ActiveBool):
         self.observer.set(state, "")
 
     def setObserver(self, observer, current=None):
-        if self.args.disable_observer or self.router is None:
+        # if self.args.disable_observer or self.router is None:
+        if 'producer' not in self.args.tags or self.router is None:
             return
 
         is_null = True
