@@ -181,8 +181,9 @@ class WebServer:
             '-i', dest="icon", default="lightbulb-o", help="Dummy's icon (Font Awesome names)")
         parser.add_argument(
             '-o', dest="observer", default=None, help="Set observer address", type=str.upper)
+        tags = ['consumer', 'producer']
         parser.add_argument(
-            '--tags', nargs='*', choices=['consumer', 'producer'], help="Set property 'tgas'")
+            '--tags', nargs='*', choices=tags, default=tags, help="Set property 'tags'")
         #   '--disable-observer', action="store_true", help="Disable Active.W iface")
         parser.add_argument(
             '--port', dest="web_server_port", default=5000, type=int, help="Web server port")
