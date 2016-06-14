@@ -8,7 +8,6 @@ import json
 import argparse
 import thing
 from threading import Event
-import webbrowser
 from flask import Flask, render_template, request, Response
 
 pwd = os.path.abspath(os.path.dirname(__file__))
@@ -37,7 +36,7 @@ class IBoolWI(Dummy.ActiveBool):
             self.ic = router.ice_getCommunicator()
 
         if args.observer is not None:
-            addr = self.identityToAddress(args.observer)
+            addr = self.stringToAddress(args.observer)
             self.setObserver(addr)
 
     def stop(self):
@@ -61,7 +60,6 @@ class IBoolWI(Dummy.ActiveBool):
         self.observer.set(state, "")
 
     def setObserver(self, observer, current=None):
-        # if self.args.disable_observer or self.router is None:
         if 'producer' not in self.args.tags or self.router is None:
             return
 
@@ -74,7 +72,7 @@ class IBoolWI(Dummy.ActiveBool):
         if is_null:
             observer = None
         else:
-            observer = self.addressToIdentity(observer)
+            observer = self.addressToString(observer)
             self.observer = self.router.ice_identity(self.ic.stringToIdentity(observer))
             self.observer = self.observer.ice_encodingVersion(Ice.Encoding_1_0)
             self.observer = self.observer.ice_oneway()
@@ -82,11 +80,11 @@ class IBoolWI(Dummy.ActiveBool):
 
         print(" * Set observer to '{}'".format(self.observer))
 
-    def addressToIdentity(self, address):
+    def addressToString(self, address):
         return "".join("{:02X}".format(ord(c)) for c in address)
 
-    def identityToAddress(self, identity):
-        return "".join(chr(int(x, 16)) for x in identity.split(":"))
+    def stringToAddress(self, addr):
+        return "".join(chr(int(x, 16)) for x in addr.split(":"))
 
 
 class WebServer:
@@ -107,7 +105,6 @@ class WebServer:
         self.setup_servant()
         self.update_properties()
         self.announce_on_router()
-        webbrowser.open(self.server_url())
         self.event_loop()
 
     def event_loop(self):
@@ -132,16 +129,11 @@ class WebServer:
         if self.ps is None:
             return
 
-        print(" * Setting properties on PropertyService")
-
-        # tags = ["consumer"]
-        # if not self.args.disable_observer:
-        #     tags.append("producer")
-
         t_tags = thing.from_(self.args.tags)
         t_name = thing.from_(self.args.name)
         t_icon = thing.from_(self.args.icon)
 
+        print(" * Setting properties on PropertyService")
         self.ps.set("{} | tags".format(self.args.address), t_tags)
         self.ps.set("{} | name".format(self.args.address), t_name)
         self.ps.set("{} | icon".format(self.args.address), t_icon)
@@ -185,7 +177,6 @@ class WebServer:
         tags = ['consumer', 'producer']
         parser.add_argument(
             '--tags', nargs='*', choices=tags, default=tags, help="Set property 'tags'")
-        #   '--disable-observer', action="store_true", help="Disable Active.W iface")
         parser.add_argument(
             '--port', dest="web_server_port", default=5000, type=int, help="Web server port")
 
@@ -201,11 +192,15 @@ class WebServer:
     @app.route("/status")
     @add_self
     def get_status(self):
+        observer = self.args.observer
+        if self.servant.observer:
+            observer = Ice.identityToString(self.servant.observer.ice_getIdentity())
+
         return json.dumps({
             'state': self.servant.state,
             'address': self.servant.address,
             'icon': self.args.icon,
-            'observer': self.args.observer,
+            'observer': observer,
         })
 
     @app.route("/set")
