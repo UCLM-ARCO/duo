@@ -7,6 +7,7 @@ import Ice
 import json
 import argparse
 import thing
+import webbrowser
 from threading import Event
 from flask import Flask, render_template, request, Response
 
@@ -105,6 +106,10 @@ class WebServer:
         self.setup_servant()
         self.update_properties()
         self.announce_on_router()
+
+        if self.args.open_browser:
+            webbrowser.open(self.server_url())
+
         self.event_loop()
 
     def event_loop(self):
@@ -174,6 +179,8 @@ class WebServer:
             '-i', dest="icon", default="lightbulb-o", help="Dummy's icon (Font Awesome names)")
         parser.add_argument(
             '-o', dest="observer", default=None, help="Set observer address", type=str.upper)
+        parser.add_argument(
+            '--open-browser', action="store_true", help="Open URL on a web browser")
         tags = ['consumer', 'producer']
         parser.add_argument(
             '--tags', nargs='*', choices=tags, default=tags, help="Set property 'tags'")
