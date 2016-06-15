@@ -163,14 +163,18 @@ class WebServer:
         adapter.activate()
 
         self.servant = IBoolWI(self.args, self.router)
-        oid = self.ic.stringToIdentity(self.args.address.replace(":", ""))
+        oid = self.ic.stringToIdentity(self.args.address)
         self.servant_proxy = adapter.add(self.servant, oid)
         print(" * Proxy ready: '{}'".format(self.servant_proxy))
 
     def parse_args(self, args):
         parser = argparse.ArgumentParser()
+
+        def parse_addr(v):
+            return v.replace(":", "").upper()
+
         parser.add_argument(
-            "-a", dest="address", default="AA:02", help="IDM Address", type=str.upper)
+            "-a", dest="address", default="AA:02", help="IDM Address", type=parse_addr)
         parser.add_argument(
             "-s", dest="state", default=False, choices=["True", "False"], help="Initial state")
         parser.add_argument(
@@ -178,7 +182,7 @@ class WebServer:
         parser.add_argument(
             '-i', dest="icon", default="lightbulb-o", help="Dummy's icon (Font Awesome names)")
         parser.add_argument(
-            '-o', dest="observer", default=None, help="Set observer address", type=str.upper)
+            '-o', dest="observer", default=None, help="Set observer address", type=parse_addr)
         parser.add_argument(
             '--open-browser', action="store_true", help="Open URL on a web browser")
         tags = ['consumer', 'producer']
