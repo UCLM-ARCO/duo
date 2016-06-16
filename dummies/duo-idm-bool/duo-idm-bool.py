@@ -71,15 +71,16 @@ class IBoolWI(Dummy.ActiveBool):
                 break
 
         if is_null:
-            observer = None
+            self.observer = None
+            print(" * Removing observer")
+
         else:
             observer = self.addressToString(observer)
             self.observer = self.router.ice_identity(self.ic.stringToIdentity(observer))
             self.observer = self.observer.ice_encodingVersion(Ice.Encoding_1_0)
             self.observer = self.observer.ice_oneway()
             self.observer = DUO.IDM.IBool.WPrx.uncheckedCast(self.observer)
-
-        print(" * Set observer to '{}'".format(self.observer))
+            print(" * Set observer to '{}'".format(self.observer))
 
     def addressToString(self, address):
         return "".join("{:02X}".format(ord(c)) for c in address)
