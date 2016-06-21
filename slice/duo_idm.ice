@@ -11,27 +11,30 @@ module DUO {
 
     module IDM {
 
+	// FIXME: change this to string
+	sequence<byte> Address;
+
 	module IBool {
-	    interface W { void set(bool v, IDM::Address source); };
+	    interface W { void set(bool v, Address source); };
 	};
 
 	module IInt {
-	    interface W { void set(int v, IDM::Address source); };
+	    interface W { void set(int v, Address source); };
 	};
 
 	module Active {
 	    interface R {
-		IDM::Address getObserver();
+		Address getObserver();
 	    };
 
 	    interface W {
-		void setObserver(IDM::Address observer);
+		void setObserver(Address observer);
 	    };
 	};
 
 	interface Listener {
-	    void adv(IDM::Address obj);
-	    void bye(IDM::Address obj);
+	    void adv(Address obj);
+	    void bye(Address obj);
 	};
     };
 };
