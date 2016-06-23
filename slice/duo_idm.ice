@@ -33,8 +33,8 @@ module DUO {
 	};
 
 	interface Listener {
-	    void adv(Address obj);
-	    void bye(Address obj);
+	    void adv(string address);
+	    void bye(string address);
 	};
     };
 };
