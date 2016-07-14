@@ -23,7 +23,7 @@ module DUO {
 	};
 
 	module IString {
-	    interface W { void set(int v, Address source); };
+	    interface W { void set(string v, Address source); };
 	};
 
 	module Active {
