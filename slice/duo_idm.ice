@@ -22,6 +22,10 @@ module DUO {
 	    interface W { void set(int v, Address source); };
 	};
 
+	module IString {
+	    interface W { void set(int v, Address source); };
+	};
+
 	module Active {
 	    interface R {
 		Address getObserver();
