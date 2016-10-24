@@ -18,6 +18,10 @@ module DUO {
 	    interface W { void set(bool v, Address source); };
 	};
 
+	module IByte {
+	    interface W { void set(byte v, Address source); };
+	};
+
 	module IInt {
 	    interface W { void set(int v, Address source); };
 	};
