@@ -3,3 +3,5 @@ syntax: glob
 *~
 *.pyc
 .pc
+*.zip
+duo_idm.h
