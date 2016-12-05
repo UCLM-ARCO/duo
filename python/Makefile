@@ -2,9 +2,10 @@
 
 SHELL=/bin/bash
 
+install: DST = $(DESTDIR)/usr/lib/python3/dist-packages/duo/
 install: clean
-	install -vd $(DESTDIR)/usr/share/pyshared/duo/
-	install -m 644 *.py $(DESTDIR)/usr/share/pyshared/duo/
+	install -vd $(DST)
+	install -m 644 *.py $(DST)
 
 
 .PHONY: clean
