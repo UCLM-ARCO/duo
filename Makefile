@@ -8,6 +8,7 @@ install:
 	$(MAKE) -C dummies install
 	$(MAKE) -C clients install
 	$(MAKE) -C servers install
+	$(MAKE) -C python install
 
 arduino-package: ARDUINO_DIST=/tmp/duo-idm/arduino/duo
 arduino-package: clean
