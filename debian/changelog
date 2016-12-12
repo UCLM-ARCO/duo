@@ -1,3 +1,9 @@
+duo (0.20161212-1) unstable; urgency=low
+
+  * New release, slice module for Py3
+
+ -- Oscar Aceña Herrera <oscaracena@gmail.com>  Mon, 12 Dec 2016 18:47:52 +0100
+
 duo (0.20161205-1) unstable; urgency=low
 
   * New release, added python slice module
